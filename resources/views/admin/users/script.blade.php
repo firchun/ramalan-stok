@@ -33,6 +33,38 @@
                     }
                 ]
             });
+            $('#datatable-mitra').DataTable({
+                processing: true,
+                serverSide: true,
+                responsive: true,
+                ajax: '{{ url('mitra-datatable') }}',
+                columns: [{
+                        data: 'id',
+                        name: 'id'
+                    },
+                    {
+                        data: 'avatar',
+                        name: 'avatar'
+                    },
+                    {
+                        data: 'name',
+                        name: 'name'
+                    },
+                    {
+                        data: 'email',
+                        name: 'email'
+                    },
+
+                    {
+                        data: 'role',
+                        name: 'role'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    }
+                ]
+            });
             $('.create-new').click(function() {
                 $('#create').modal('show');
             });

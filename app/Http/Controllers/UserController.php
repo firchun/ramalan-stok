@@ -17,14 +17,40 @@ class UserController extends Controller
     public function index()
     {
         $data = [
-            'title' => 'Users',
-            'users' => User::all()
+            'title' => 'Akun Admin',
+            'role' => 'Admin',
         ];
         return view('admin.users.index', $data);
     }
+    public function mitra()
+    {
+        $data = [
+            'title' => 'Akun Mitra',
+            'role' => 'Mitra',
+        ];
+        return view('admin.users.mitra', $data);
+    }
     public function getUsersDataTable()
     {
-        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->orderByDesc('id');
+        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->where('role', 'Admin')->orderByDesc('id');
+
+        return Datatables::of($users)
+            ->addColumn('avatar', function ($user) {
+                return view('admin.users.components.avatar', compact('user'));
+            })
+            ->addColumn('action', function ($user) {
+                return view('admin.users.components.actions', compact('user'));
+            })
+            ->addColumn('role', function ($user) {
+                return '<span class="badge bg-label-primary">' . $user->role . '</span>';
+            })
+
+            ->rawColumns(['action', 'role', 'avatar'])
+            ->make(true);
+    }
+    public function getUsersMitraDataTable()
+    {
+        $users = User::select(['id', 'name', 'email', 'created_at', 'updated_at', 'role', 'avatar'])->where('role', 'Mitra')->orderByDesc('id');
 
         return Datatables::of($users)
             ->addColumn('avatar', function ($user) {

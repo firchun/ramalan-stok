@@ -20,11 +20,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="formUserRole" class="form-label">Role</label>
-                        <select class="form-control" id="formUserRole" name="role">
-                            <option value="User">User</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Operator">Operator</option>
-                        </select>
+                        <input type="text" value="{{ $role }}" readonly name="role" class="form-control">
                     </div>
 
                 </form>
@@ -56,11 +52,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="formUserRole" class="form-label">Role</label>
-                        <select class="form-control" id="formUserRole" name="role">
-                            <option value="User">User</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Operator">Operator</option>
-                        </select>
+                        <input type="text" value="{{ $role }}" readonly name="role" class="form-control">
                     </div>
                 </form>
             </div>

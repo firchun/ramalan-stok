@@ -45,6 +45,12 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('backend_theme/') }}/assets/js/config.js"></script>
+    <style>
+        .gradient-btn {
+            background: linear-gradient(to right, #ff6ec4, #7873f5);
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
