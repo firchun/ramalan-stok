@@ -21,7 +21,7 @@
     <meta name="theme-name" content="aviato" />
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/frontend_theme/') }}/images/favicon.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/img/') }}/logo.png" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.0.1/css/ionicons.min.css"
         integrity="sha512-pEEXf+G92p3tgg8PmdvczNEIbChpgL4CZulz1P2f8VnNf1iU+mr0qW1UYD0d+GnN0Ck+AXRJYO9mcQG2E7YfDQ=="
         crossorigin="anonymous" />
@@ -68,8 +68,8 @@
     <script src="{{ asset('/frontend_theme/') }}/plugins/slick/slick.min.js"></script>
     <script src="{{ asset('/frontend_theme/') }}/plugins/slick/slick-animation.min.js"></script>
 
-    <!-- Google Mapl -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw"></script>
+    {{-- <!-- Google Mapl -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw"></script> --}}
     <script type="text/javascript" src="{{ asset('/frontend_theme/') }}/plugins/google-map/gmap.js"></script>
 
     <!-- Main Js File -->

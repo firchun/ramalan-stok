@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\StokMitra;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -59,11 +60,34 @@ class UserController extends Controller
             ->addColumn('action', function ($user) {
                 return view('admin.users.components.actions', compact('user'));
             })
+            ->addColumn('action_stok', function ($user) {
+                return view('admin.stok_mitra.actions', compact('user'));
+            })
             ->addColumn('role', function ($user) {
                 return '<span class="badge bg-label-primary">' . $user->role . '</span>';
             })
+            ->addColumn('produk', function ($user) {
+                $produkCount = StokMitra::select('id_produk')
+                    ->selectRaw('COUNT(*) as total_produk')
+                    ->where('id_user', $user->id)
+                    ->groupBy('id_produk')
+                    ->get();
 
-            ->rawColumns(['action', 'role', 'avatar'])
+                $totalProduk = $produkCount->sum('total_produk');
+
+                return $totalProduk . ' Produk';
+            })
+            ->addColumn('stok', function ($user) {
+                $stok = StokMitra::selectRaw('SUM(CASE WHEN jenis = "Masuk" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Keluar" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Penjualan" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Return" AND konfirmasi = "1" THEN jumlah ELSE 0 END) AS total_jumlah')
+                    ->where('id_user', $user->id)
+                    ->groupBy('id_user')
+                    ->first();
+
+
+                return $stok ? $stok->total_jumlah . ' Stok' : 0;
+            })
+
+            ->rawColumns(['action', 'role', 'avatar', 'action_stok', 'stok', 'produk'])
             ->make(true);
     }
     public function store(Request $request)

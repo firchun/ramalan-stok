@@ -13,15 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('produk', function (Blueprint $table) {
+        Schema::create('stok', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_jenis_produk');
-            $table->string('foto_produk')->nullable();
-            $table->string('nama_produk');
-            $table->text('keterangan_produk');
+            $table->foreignId('id_produk');
+            $table->foreignId('id_user');
+            $table->enum('jenis', ['Keluar', 'Masuk', 'Kembali', 'Penjualan'])->default('Masuk');
+            $table->integer('jumlah');
             $table->timestamps();
 
-            $table->foreign('id_jenis_produk')->references('id')->on('jenis_produk');
+            $table->foreign('id_produk')->references('id')->on('produk');
+            $table->foreign('id_user')->references('id')->on('users');
         });
     }
 
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('produk');
+        Schema::dropIfExists('stok');
     }
 };

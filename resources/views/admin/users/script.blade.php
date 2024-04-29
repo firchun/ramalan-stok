@@ -98,6 +98,7 @@
                         alert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#datatable-users').DataTable().ajax.reload();
+                        $('#datatable-mitra').DataTable().ajax.reload();
                         $('#usersModal').modal('hide');
                     },
                     error: function(xhr) {

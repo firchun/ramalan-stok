@@ -1,20 +1,25 @@
 @extends('layouts.backend.admin')
 
 @section('content')
-    <div class="row">
+    <div class="jumbroton text-center mb-5">
+        <img src="{{ asset('/img/logo.png') }}" style="width: 100px;">
+        <h4>Selamat Datang di {{ env('APP_NAME') ?? 'Laravel' }}</h4>
+    </div>
+    <hr>
+    <div class="row justify-content-center">
         @include('admin.dashboard_component.card1', [
-            'count' => $users,
-            'title' => 'Users',
-            'subtitle' => 'Total users',
+            'count' => $mitra,
+            'title' => 'Mitra',
+            'subtitle' => 'Total mitra',
             'color' => 'primary',
             'icon' => 'user',
         ])
         @include('admin.dashboard_component.card1', [
-            'count' => $customers,
-            'title' => 'Customers',
-            'subtitle' => 'Total Customers',
+            'count' => $produk,
+            'title' => 'Produk',
+            'subtitle' => 'Total Produk',
             'color' => 'success',
-            'icon' => 'user',
+            'icon' => 'folder',
         ])
     </div>
 @endsection

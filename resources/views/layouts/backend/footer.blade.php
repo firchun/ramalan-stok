@@ -5,9 +5,8 @@
             <script>
                 document.write(new Date().getFullYear());
             </script>
-            , Sneat template
+            , {{ env('APP_NAME') ?? 'Laravel' }}
 
         </div>
-
     </div>
 </footer>
