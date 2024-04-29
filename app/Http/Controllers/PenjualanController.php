@@ -9,14 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PenjualanController extends Controller
 {
-    // public function index()
-    // {
-
-    //     $data = [
-    //         'title' => 'Penjualan Produk',
-    //     ];
-    //     return view('admin.penjualan.index', $data);
-    // }
     public function penjualan(Request $request)
     {
         $role = Auth::user()->role;

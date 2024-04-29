@@ -81,6 +81,36 @@ class StokMitraController extends Controller
             ->rawColumns(['nama', 'tanggal'])
             ->make(true);
     }
+    public function getAllStokMitraDataTable(Request $request)
+    {
+        $stok = StokMitra::with(['produk', 'user'])
+            ->orderByDesc('id');
+
+        if ($request->tanggal_awal != null || $request->tanggal_awal != '') {
+            $stok->where('created_at', '>=', $request->tanggal_awal)->where('created_at', '<=', $request->tanggal_akhir);
+        }
+        if ($request->jenis != null || $request->jenis != '') {
+            $stok->where('jenis', $request->jenis);
+        }
+        if ($request->mitra != null || $request->mitra != '') {
+            $stok->where('id_user', $request->mitra);
+        }
+
+        return Datatables::of($stok)
+
+            ->addColumn('tanggal', function ($stok) {
+                return $stok->created_at->format('d F Y');
+            })
+            ->addColumn('nama', function ($stok) {
+                $span = '<br><span class="badge bg-primary">' . $stok->jenis . '</span>';
+                return '<strong>' . $stok->produk->nama_produk . '</strong>' . $span;
+            })
+            ->addColumn('return', function ($stok) {
+                return view('admin.stok_mitra.action_return', compact('stok'));
+            })
+            ->rawColumns(['nama', 'tanggal'])
+            ->make(true);
+    }
     public function getReturnStokMitraDataTable()
     {
         $stok = StokMitra::with(['produk', 'user'])

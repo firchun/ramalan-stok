@@ -77,6 +77,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //stok mitra managemen
     Route::get('/stok/mitra/return', [StokMitraController::class, 'return'])->name('stok.mitra.return');
     Route::get('/return-stok-datatable', [StokMitraController::class, 'getReturnStokMitraDataTable']);
+    Route::get('/all-stok-mitra-datatable', [StokMitraController::class, 'getAllStokMitraDataTable']);
     // Route::get('/stok/mitra', [StokMitraController::class, 'index'])->name('stok.mitra');
     // Route::post('/stok/mitra/store',  [StokMitraController::class, 'store'])->name('stok.mitra.store');
     // Route::get('/stok/mitra/detail/{id}',  [StokMitraController::class, 'detail'])->name('stok.mitra.detail');

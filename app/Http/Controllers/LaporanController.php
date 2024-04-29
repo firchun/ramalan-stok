@@ -30,4 +30,13 @@ class LaporanController extends Controller
         ];
         return view('admin.laporan.one', $data);
     }
+    public function printUtama(Request $request)
+    {
+    }
+    public function printMitra(Request $request)
+    {
+    }
+    public function printMitraOne(Request $request)
+    {
+    }
 }
