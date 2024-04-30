@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JenisProduk;
+use App\Models\Peramalan;
 use App\Models\Produk;
 use App\Models\Stok;
 use Illuminate\Http\Request;
@@ -116,10 +117,17 @@ class ProdukController extends Controller
             ->addColumn('action', function ($produk) {
                 return view('admin.produk.components.actions', compact('produk'));
             })
+            ->addColumn('action_ramalan', function ($produk) {
+                return view('admin.peramalan.actions', compact('produk'));
+            })
             ->addColumn('keterangan', function ($produk) {
                 return Str::limit($produk->keterangan_produk, 100);
             })
-            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok'])
+            ->addColumn('hasil_ramalan', function ($produk) {
+                $total = Peramalan::where('id_produk', $produk->id)->count();
+                return $total ?? 0;
+            })
+            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan'])
             ->make(true);
     }
     public function store(Request $request)

@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\PeramalanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StokController;
@@ -93,4 +94,8 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     // laporan
     Route::get('/report/mitra', [LaporanController::class, 'mitra'])->name('report.mitra');
     Route::get('/report/utama', [LaporanController::class, 'utama'])->name('report.utama');
+    //peramalan
+    Route::get('/peramalan', [PeramalanController::class, 'index'])->name('peramalan');
+    Route::get('/peramalan/hasil/{id_produk}', [PeramalanController::class, 'hasilProduk'])->name('peramalan.hasil');
+    Route::get('/peramalan-datatable/{id_produk}', [PeramalanController::class, 'getPeramalanDataTable']);
 });

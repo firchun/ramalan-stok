@@ -25,6 +25,14 @@
                 <div data-i18n="Analytics">Dashboard</div>
             </a>
         </li>
+        @if (Auth::user()->role == 'Admin')
+            <li class="menu-item {{ request()->is('peramalan*') ? 'active' : '' }}">
+                <a href="{{ url('/peramalan') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-braille"></i>
+                    <div data-i18n="Analytics">Peramalan</div>
+                </a>
+            </li>
+        @endif
         {{-- <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Transaksi</span>
         </li>
