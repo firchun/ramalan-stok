@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Stok;
 use App\Models\StokMitra;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -87,7 +88,12 @@ class StokMitraController extends Controller
             ->orderByDesc('id');
 
         if ($request->tanggal_awal != null || $request->tanggal_awal != '') {
-            $stok->where('created_at', '>=', $request->tanggal_awal)->where('created_at', '<=', $request->tanggal_akhir);
+            $tanggalAwal = $request->tanggal_awal;
+            $tanggalAkhir = $request->tanggal_akhir;
+            $tanggalAwal = Carbon::createFromFormat('Y-m-d', $tanggalAwal)->startOfDay();
+            $tanggalAkhir = Carbon::createFromFormat('Y-m-d', $tanggalAkhir)->endOfDay();
+            // $stok->where('created_at', '>=', $request->tanggal_awal)->where('created_at', '<=', $request->tanggal_akhir);
+            $stok->whereBetween('created_at', [$tanggalAwal, $tanggalAkhir]);
         }
         if ($request->jenis != null || $request->jenis != '') {
             $stok->where('jenis', $request->jenis);

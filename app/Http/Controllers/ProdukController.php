@@ -22,6 +22,14 @@ class ProdukController extends Controller
         ];
         return view('admin.produk.index', $data);
     }
+    public function mitra()
+    {
+
+        $data = [
+            'title' => 'Daftar Produk',
+        ];
+        return view('admin.produk.mitra', $data);
+    }
     public function jenis()
     {
 

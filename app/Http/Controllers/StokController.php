@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stok;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -51,7 +52,12 @@ class StokController extends Controller
     {
         $stok = Stok::with(['produk', 'user'])->orderByDesc('id');
         if ($request->tanggal_awal != null || $request->tanggal_awal != '') {
-            $stok->where('created_at', '>=', $request->tanggal_awal)->where('created_at', '<=', $request->tanggal_akhir);
+            $tanggalAwal = $request->tanggal_awal;
+            $tanggalAkhir = $request->tanggal_akhir;
+            $tanggalAwal = Carbon::createFromFormat('Y-m-d', $tanggalAwal)->startOfDay();
+            $tanggalAkhir = Carbon::createFromFormat('Y-m-d', $tanggalAkhir)->endOfDay();
+            $stok->where('created_at', '>=', $tanggalAwal)->where('created_at', '<=', $tanggalAkhir);
+            // $stok->whereBetween('created_at', [$tanggalAwal, $tanggalAkhir]);
         }
         if ($request->jenis != null || $request->jenis != '') {
             $stok->where('jenis', $request->jenis);

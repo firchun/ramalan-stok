@@ -44,9 +44,13 @@ Route::middleware(['auth:web'])->group(function () {
     Route::post('/return-stok-mitra',  [StokMitraController::class, 'returnStok'])->name('return-stok-mitra');
     //laporan managemen
     Route::get('/report/mitra/{id}', [LaporanController::class, 'mitraOne']);
+    Route::get('/report/printMitra/{id}', [LaporanController::class, 'printMitraOne']);
     //akun managemen
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    //produk managemen
+    Route::get('/produk/mitra', [ProdukController::class, 'mitra'])->name('produk.mitra');
+    Route::get('/produk-datatable', [ProdukController::class, 'getProdukDataTable']);
 });
 Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //user managemen
@@ -58,11 +62,11 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/users-datatable', [UserController::class, 'getUsersDataTable']);
     Route::get('/mitra-datatable', [UserController::class, 'getUsersMitraDataTable']);
     //produk managemen
-    Route::get('/produk', [ProdukController::class, 'produk'])->name('produk');
+    // Route::get('/produk', [ProdukController::class, 'produk'])->name('produk');
     Route::post('/produk/store',  [ProdukController::class, 'store'])->name('produk.store');
     Route::get('/produk/edit/{id}',  [ProdukController::class, 'edit'])->name('produk.edit');
     Route::delete('/produk/delete/{id}',  [ProdukController::class, 'destroy'])->name('produk.delete');
-    Route::get('/produk-datatable', [ProdukController::class, 'getProdukDataTable']);
+    // Route::get('/produk-datatable', [ProdukController::class, 'getProdukDataTable']);
     //jenis_produk managemen
     Route::get('/jenis_produk', [ProdukController::class, 'jenis'])->name('jenis_produk');
     Route::post('/jenis_produk/store',  [ProdukController::class, 'storeJenis'])->name('jenis_produk.store');
@@ -94,6 +98,8 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     // laporan
     Route::get('/report/mitra', [LaporanController::class, 'mitra'])->name('report.mitra');
     Route::get('/report/utama', [LaporanController::class, 'utama'])->name('report.utama');
+    Route::get('/report/printMitra', [LaporanController::class, 'printMitra'])->name('report.printMitra');
+    Route::get('/report/printUtama', [LaporanController::class, 'printUtama'])->name('report.printUtama');
     //peramalan
     Route::get('/peramalan', [PeramalanController::class, 'index'])->name('peramalan');
     Route::get('/peramalan/hasil/{id_produk}', [PeramalanController::class, 'hasilProduk'])->name('peramalan.hasil');

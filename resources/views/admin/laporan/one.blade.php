@@ -103,23 +103,16 @@
                 ],
                 dom: 'lBfrtip',
                 buttons: [{
-                        extend: 'pdf',
                         text: '<i class="bx bxs-file-pdf"></i> PDF',
                         className: 'btn-danger mx-3',
-                        orientation: 'landscape',
-                        title: 'Data Laporan Stok Benih Tersertifikasi',
-                        pageSize: 'A4',
-                        exportOptions: {
-                            columns: ':visible'
-                        },
-                        customize: function(doc) {
-                            doc.defaultStyle.fontSize = 8;
-                            doc.styles.tableHeader.fontSize = 8;
-                            doc.styles.tableHeader.fillColor = '#2a6908';
-
-
-                        },
-                        header: true
+                        action: function(e, dt, button, config) {
+                            window.location =
+                                '{{ url('/report/printMitra', $user->id) }}?tanggal_awal=' +
+                                $('#tanggalAwal').val() + '&tanggal_akhir=' +
+                                $('#tanggalAkhir').val() + '&jenis=' +
+                                $('#selectJenis').val()
+                            '';
+                        }
                     },
                     {
                         extend: 'excelHtml5',

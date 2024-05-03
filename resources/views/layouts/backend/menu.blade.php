@@ -112,6 +112,15 @@
             </li>
         @elseif(Auth::user()->role == 'Mitra')
             <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Produk</span>
+            </li>
+            <li class="menu-item {{ request()->is('produk/mitra') ? 'active' : '' }}">
+                <a href="{{ url('/produk/mitra') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-folder"></i>
+                    <div data-i18n="Analytics">Daftar Produk</div>
+                </a>
+            </li>
+            <li class="menu-header small text-uppercase">
                 <span class="menu-header-text">Stok</span>
             </li>
             <li class="menu-item {{ request()->is('stok/mitra/detail*') ? 'active' : '' }}">
