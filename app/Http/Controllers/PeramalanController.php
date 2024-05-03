@@ -110,13 +110,13 @@ class PeramalanController extends Controller
         $total_average = ($total_stok + $total_stok_mitra) / 3;
 
         //hitung MSE
-        // $mse = pow($total_average, 2);
+        $mse = pow($total_average, 2);
 
         // //hitung total error
-        // $total_error = 0;
-        // foreach ($total_bulanan as $total) {
-        //     $total_error += pow($total['stok'] + $total['stok_mitra'] - $total_average, 2);
-        // }
+        $total_error = 0;
+        foreach ($total_bulanan as $total) {
+            $total_error += pow($total['stok'] + $total['stok_mitra'] - $total_average, 2);
+        }
 
 
         //menampilkan data berbentuk json
@@ -127,8 +127,8 @@ class PeramalanController extends Controller
             'nilai_1' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
             'nilai_2' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
             'nilai_3' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
-            // 'total_mse' => $mse,
-            // 'total_error' => $total_error,
+            'total_mse' => $mse,
+            'total_error' => $total_error,
         ];
 
         //cek data json pada console

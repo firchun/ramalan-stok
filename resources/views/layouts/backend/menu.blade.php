@@ -22,7 +22,7 @@
         <li class="menu-item {{ request()->is('home*') ? 'active' : '' }}">
             <a href="{{ url('/home') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                <div data-i18n="Analytics">Dashboard</div>
+                <div data-i18n="Analytics">Home</div>
             </a>
         </li>
         @if (Auth::user()->role == 'Admin')
