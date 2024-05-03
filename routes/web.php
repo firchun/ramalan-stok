@@ -97,5 +97,6 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //peramalan
     Route::get('/peramalan', [PeramalanController::class, 'index'])->name('peramalan');
     Route::get('/peramalan/hasil/{id_produk}', [PeramalanController::class, 'hasilProduk'])->name('peramalan.hasil');
-    Route::get('/peramalan-datatable/{id_produk}', [PeramalanController::class, 'getPeramalanDataTable']);
+    Route::post('/peramalan/store', [PeramalanController::class, 'store'])->name('peramalan.store');
+    Route::get('/hasil-ramalan-datatable/{id_produk}', [PeramalanController::class, 'getPeramalanDataTable']);
 });

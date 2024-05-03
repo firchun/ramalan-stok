@@ -4,11 +4,8 @@
     @include('layouts.backend.alert')
     <div class="card mb-5">
         <div class="card-body">
-
-
             <strong class="mb-3">Buat Ramalan</strong>
             <div class="d-flex justify-content-center align-items-center row mt-2">
-
                 <div class="col-md-3 col-12 mb-3">
                     <div class="input-group">
                         <span class="input-group-text">Produk</span>
@@ -41,12 +38,10 @@
                     </div>
                 </div>
                 <div class="col-md-3 col-12 mb-3 ">
-                    <button type="button" id="filter" class="btn btn-primary"><i class="bx bx-braille"></i>
+                    <button type="button" id="btnRamal" class="btn btn-primary"><i class="bx bx-braille"></i>
                         Buat Ramalan</button>
-
                 </div>
             </div>
-
         </div>
     </div>
     <div class="row justify-content-center">
@@ -122,6 +117,34 @@
             $('.refresh').click(function() {
                 $('#datatable-produk').DataTable().ajax.reload();
             });
+            $('#btnRamal').click(function() {
+                var id_produk = $('#selectProduk').val();
+                var bulan = $('#selectBulan').val();
+                var tahun = $('#selectTahun').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/peramalan/store',
+                    data: {
+                        id_produk: id_produk,
+                        bulan: bulan,
+                        tahun: tahun,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        console.log(response);
+                        alert(response.message);
+                        $('#datatable-produk').DataTable().ajax.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                    }
+                });
+            });
+            window.hasilRamalan = function(id) {
+                var url = "{{ url('/peramalan/hasil') }}/" + id;
+                window.location.href = url;
+            };
         });
     </script>
 @endpush
