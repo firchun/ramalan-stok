@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stok;
+use App\Models\Varian;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ class StokController extends Controller
     {
         $stok = new Stok();
         $stok->id_produk = $id_produk;
+        $stok->id_varian = $request->id_varian ?? null;
         $stok->jenis = 'Masuk';
         $stok->jumlah = $request->jumlah;
         $stok->id_user = Auth::id();
@@ -31,14 +33,33 @@ class StokController extends Controller
     }
     public function kurangStok(Request $request, $id_produk)
     {
-        $jumlah_bertambah = Stok::where('id_produk', $id_produk)->where('jenis', 'Masuk')->sum('jumlah');
-        $jumlah_berkurang = Stok::where('id_produk', $id_produk)->where('jenis', 'Keluar')->sum('jumlah');
-        $jumlah_penjualan = Stok::where('id_produk', $id_produk)->where('jenis', 'Penjualan')->sum('jumlah');
+        $jumlah_bertambah = Stok::where('id_produk', $id_produk)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
+            ->where('jenis', 'Masuk')
+            ->sum('jumlah');
+        $jumlah_berkurang = Stok::where('id_produk', $id_produk)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
+            ->where('jenis', 'Keluar')
+            ->sum('jumlah');
+        $jumlah_penjualan = Stok::where('id_produk', $id_produk)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
+            ->where('jenis', 'Penjualan')
+            ->sum('jumlah');
         $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
 
         if ($jumlah >= $request->jumlah) {
             $stok = new Stok();
             $stok->id_produk = $id_produk;
+            $stok->id_varian = $request->id_varian ?? null;
             $stok->jenis = 'Keluar';
             $stok->jumlah = $request->jumlah;
             $stok->id_user = Auth::id();
@@ -69,6 +90,10 @@ class StokController extends Controller
             })
             ->addColumn('tanggal', function ($stok) {
                 return $stok->created_at->format('d F Y');
+            })
+            ->addColumn('varian', function ($stok) {
+                $varian = Varian::find($stok->id_varian);
+                return $varian ? $varian->nama : null;
             })
             ->rawColumns(['jenis_txt', 'tanggal'])
             ->make(true);

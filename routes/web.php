@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StokController;
 use App\Http\Controllers\StokMitraController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VarianController;
 use App\Models\Produk;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -62,7 +63,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/users-datatable', [UserController::class, 'getUsersDataTable']);
     Route::get('/mitra-datatable', [UserController::class, 'getUsersMitraDataTable']);
     //produk managemen
-    // Route::get('/produk', [ProdukController::class, 'produk'])->name('produk');
+    Route::get('/produk', [ProdukController::class, 'produk'])->name('produk');
     Route::post('/produk/store',  [ProdukController::class, 'store'])->name('produk.store');
     Route::get('/produk/edit/{id}',  [ProdukController::class, 'edit'])->name('produk.edit');
     Route::delete('/produk/delete/{id}',  [ProdukController::class, 'destroy'])->name('produk.delete');
@@ -73,6 +74,10 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/jenis_produk/edit/{id}',  [ProdukController::class, 'editJenis'])->name('jenis_produk.edit');
     Route::delete('/jenis_produk/delete/{id}',  [ProdukController::class, 'destroyJenis'])->name('jenis_produk.delete');
     Route::get('/jenis_produk-datatable', [ProdukController::class, 'getjenisProdukDataTable']);
+    //varian managemen
+    Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
+    Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
+    Route::post('/varian/store', [VarianController::class, 'store'])->name('varian.store');
     //stok managemen
     Route::get('/stok', [StokController::class, 'index'])->name('stok');
     Route::post('/stok/store',  [StokController::class, 'store'])->name('stok.store');

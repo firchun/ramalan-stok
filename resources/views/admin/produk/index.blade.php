@@ -42,8 +42,9 @@
                                 <th style="width:100px;">Foto Produk</th>
                                 <th>Nama Produk</th>
                                 <th>Keterangan Singkat</th>
+                                <th style="width:200px;">Varian</th>
                                 <th style="width:100px;">Stok</th>
-                                <th style="width:150px;">Action</th>
+                                <th style="width:200px;">Action</th>
                             </tr>
                         </thead>
 
@@ -53,6 +54,7 @@
                                 <th>Foto Produk</th>
                                 <th>Nama Produk</th>
                                 <th>Keterangan Singkat</th>
+                                <th>Varian</th>
                                 <th>Stok</th>
                                 <th>Action</th>
                             </tr>

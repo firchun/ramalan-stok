@@ -8,12 +8,18 @@
                     <div class="mb-3">
                         <label for="formPenjualanIdProduk" class="form-label">Pilih Produk</label>
                         <select class="form-select" id="formPenjualanIdProduk" name="id_produk">
+                            <option value="">Pilih Produk
+                            </option>
                             @foreach (App\Models\StokMitra::select('id_produk')->selectRaw('id_produk')->with('produk')->where('id_user', Auth::id())->groupBy('id_produk')->get() as $item)
                                 <option value="{{ $item->produk->id }}">{{ $item->produk->jenis->jenis }} -
                                     {{ $item->produk->nama_produk }}
                                 </option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formPenjualanVarian" class="form-label">Pilih Varian</label>
+                        <select id="formPenjualanVarian" class="form-select" name="id_varian"></select>
                     </div>
                     <div class="mb-3">
                         <label for="formPenjualanJumlah" class="form-label">Jumlah</label>
@@ -28,10 +34,31 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(function() {
         $('.penjualan').click(function() {
             $('#penjualan').modal('show');
+        });
+        $('#formPenjualanIdProduk').change(function() {
+            var id_produk = $(this).val();
+            $.ajax({
+                url: '/varian-list/' + id_produk,
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var dropdown = $('#formPenjualanVarian');
+                    dropdown.empty();
+                    $.each(response, function(index, varian) {
+                        dropdown.append($('<option></option>').attr('value', varian
+                            .id).text(varian.nama + '  [' + varian.ukuran +
+                            ']'));
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
         });
         $('#btnPenjualan').click(function() {
             var jumlah = $('#formPenjualanJumlah').val();

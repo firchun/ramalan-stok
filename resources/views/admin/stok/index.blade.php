@@ -28,6 +28,7 @@
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
                                 <th>Jenis</th>
+                                <th>varian</th>
                                 <th>Jumlah</th>
                                 <th>Oleh</th>
                             </tr>
@@ -39,6 +40,7 @@
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
                                 <th>Jenis</th>
+                                <th>varian</th>
                                 <th>Jumlah</th>
                                 <th>Oleh</th>
                             </tr>
@@ -73,6 +75,10 @@
                     {
                         data: 'jenis_txt',
                         name: 'jenis_txt'
+                    },
+                    {
+                        data: 'varian',
+                        name: 'varian'
                     },
 
                     {

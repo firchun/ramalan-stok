@@ -6,6 +6,7 @@ use App\Models\JenisProduk;
 use App\Models\Peramalan;
 use App\Models\Produk;
 use App\Models\Stok;
+use App\Models\Varian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -125,6 +126,15 @@ class ProdukController extends Controller
             ->addColumn('action', function ($produk) {
                 return view('admin.produk.components.actions', compact('produk'));
             })
+            ->addColumn('varian', function ($produk) {
+                $varian = Varian::where('id_produk', $produk->id)->get();
+                $text = '<ol>';
+                foreach ($varian as $item) {
+                    $text .= '<li>' . $item->nama . ' [' . $item->ukuran . ']</li>';
+                }
+                $text .= '</ol>';
+                return $text;
+            })
             ->addColumn('action_ramalan', function ($produk) {
                 return view('admin.peramalan.actions', compact('produk'));
             })
@@ -135,7 +145,7 @@ class ProdukController extends Controller
                 $total = Peramalan::where('id_produk', $produk->id)->count();
                 return $total ?? 0;
             })
-            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan'])
+            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan', 'varian'])
             ->make(true);
     }
     public function store(Request $request)

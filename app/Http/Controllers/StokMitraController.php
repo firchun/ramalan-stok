@@ -140,13 +140,29 @@ class StokMitraController extends Controller
     }
     public function tambahStok(Request $request)
     {
-        $jumlah_bertambah = Stok::where('id_produk',  $request->id_produk)->where('jenis', 'Masuk')->sum('jumlah');
-        $jumlah_berkurang = Stok::where('id_produk',  $request->id_produk)->where('jenis', 'Keluar')->sum('jumlah');
-        $jumlah_penjualan = Stok::where('id_produk',  $request->id_produk)->where('jenis', 'Penjualan')->sum('jumlah');
+        $jumlah_bertambah = Stok::where('id_produk',  $request->id_produk)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
+            ->where('jenis', 'Masuk')->sum('jumlah');
+        $jumlah_berkurang = Stok::where('id_produk',  $request->id_produk)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
+            ->where('jenis', 'Keluar')->sum('jumlah');
+        $jumlah_penjualan = Stok::where('id_produk',  $request->id_produk)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
+            ->where('jenis', 'Penjualan')->sum('jumlah');
         $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
         if ($jumlah >= $request->jumlah) {
 
             $stok = new StokMitra();
+            $stok->id_varian = $request->id_varian ?? null;
             $stok->id_produk = $request->id_produk;
             $stok->jenis = 'Masuk';
             $stok->jumlah = $request->jumlah;
@@ -154,6 +170,7 @@ class StokMitraController extends Controller
             $stok->save();
 
             $stok_utama = new Stok();
+            $stok_utama->id_varian = $request->id_varian ?? null;
             $stok_utama->id_produk = $request->id_produk;
             $stok_utama->jenis = 'Keluar';
             $stok_utama->jumlah = $request->jumlah;
@@ -168,20 +185,36 @@ class StokMitraController extends Controller
     public function returnStok(Request $request)
     {
         $jumlah_bertambah = StokMitra::where('id_user', $request->id_user)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
             ->where('id_produk', $request->id_produk)
             ->where('jenis', 'Masuk')
             ->sum('jumlah');
 
         $jumlah_berkurang = StokMitra::where('id_user', $request->id_user)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
             ->where('id_produk', $request->id_produk)
             ->where('jenis', 'Keluar')
             ->sum('jumlah');
 
         $jumlah_penjualan = StokMitra::where('id_user', $request->id_user)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
             ->where('id_produk', $request->id_produk)
             ->where('jenis', 'Penjualan')
             ->sum('jumlah');
         $jumlah_return = StokMitra::where('id_user', $request->id_user)
+            ->where(function ($query) use ($request) {
+                $query->where('id_varian', $request->id_varian)
+                    ->orWhereNull('id_varian');
+            })
             ->where('id_produk', $request->id_produk)
             ->where('jenis', 'Return')
             ->where('konfirmasi', 1)
@@ -215,6 +248,7 @@ class StokMitraController extends Controller
             $stok_utama->jenis = 'Masuk';
             $stok_utama->jumlah = $request->jumlah;
             $stok_utama->id_produk = $stok_mitra->id_produk;
+            $stok_utama->id_varian = $stok_mitra->id_varian;
             $stok_utama->save();
             return response()->json(['message' => 'Return terkonfirmasi']);
         } else {
