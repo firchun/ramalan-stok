@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stok;
 use App\Models\Varian;
 use Illuminate\Http\Request;
 use Svg\Tag\Rect;
@@ -12,6 +13,22 @@ class VarianController extends Controller
     public function listApi($id_produk)
     {
         $data = Varian::where('id_produk', $id_produk)->get();
+        foreach ($data as $item) {
+            $jumlah_bertambah = Stok::where('id_produk', $id_produk)
+                ->where('id_varian', $item->id)
+                ->where('jenis', 'Masuk')
+                ->sum('jumlah');
+            $jumlah_berkurang = Stok::where('id_produk', $id_produk)
+                ->where('id_varian', $item->id)
+                ->where('jenis', 'Keluar')
+                ->sum('jumlah');
+            $jumlah_penjualan = Stok::where('id_produk', $id_produk)
+                ->where('id_varian', $item->id)
+                ->where('jenis', 'Penjualan')
+                ->sum('jumlah');
+            $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
+            $item->stok = $jumlah;
+        }
         return response()->json($data);
     }
     public function getVarianDataTable($id_produk)

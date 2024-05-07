@@ -56,7 +56,7 @@
                         $.each(response, function(index, varian) {
                             dropdown.append($('<option></option>').attr('value', varian
                                 .id).text(varian.nama + '  [' + varian.ukuran +
-                                ']'));
+                                '] - Stok : ' + varian.stok));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -181,7 +181,9 @@
                         $.each(response, function(index, varian) {
                             dropdown.append($('<option></option>').attr('value', varian.id)
                                 .text(
-                                    varian.nama + '  [' + varian.ukuran + ']'));
+                                    varian.nama + '  [' + varian.ukuran +
+                                    '] - Stok : ' +
+                                    varian.stok));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -192,6 +194,7 @@
             $('#btnPenjualan').click(function() {
                 var jumlah = $('#formPenjualanJumlah').val();
                 var id_produk = $('#formPenjualanIdProduk').val();
+                var id_varian = $('#formPenjualanVarian').val();
 
                 $.ajax({
                     type: 'POST',
@@ -199,6 +202,7 @@
                     data: {
                         jumlah: jumlah,
                         id_produk: id_produk,
+                        id_varian: id_varian,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
@@ -215,6 +219,7 @@
             });
             $('#btnTambahStok').click(function() {
                 var jumlah = $('#formTambahStokJumlah').val();
+                var id_varian = $('#formTambahStokVarian').val();
                 var id_produk = $(this).data('id');
 
                 $.ajax({
@@ -222,6 +227,7 @@
                     url: '/tambah-stok/' + id_produk,
                     data: {
                         jumlah: jumlah,
+                        id_varian: id_varian,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
@@ -238,6 +244,7 @@
             });
             $('#btnKurangStok').click(function() {
                 var jumlah = $('#formKurangStokJumlah').val();
+                var id_varian = $('#formKurangStokVarian').val();
                 var id_produk = $(this).data('id');
 
                 $.ajax({
@@ -245,6 +252,7 @@
                     url: '/kurang-stok/' + id_produk,
                     data: {
                         jumlah: jumlah,
+                        id_varian: id_varian,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {

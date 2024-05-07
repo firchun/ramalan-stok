@@ -66,17 +66,16 @@ class UserController extends Controller
             ->addColumn('role', function ($user) {
                 return '<span class="badge bg-label-primary">' . $user->role . '</span>';
             })
+
             ->addColumn('produk', function ($user) {
-                $produkCount = StokMitra::select('id_produk')
-                    ->selectRaw('COUNT(*) as total_produk')
-                    ->where('id_user', $user->id)
+                $produkCount = StokMitra::where('id_user', $user->id)
                     ->groupBy('id_produk')
-                    ->get();
+                    ->distinct('id_produk')
+                    ->count();
 
-                $totalProduk = $produkCount->sum('total_produk');
-
-                return $totalProduk . ' Produk';
+                return $produkCount . ' Produk';
             })
+
             ->addColumn('stok', function ($user) {
                 $stok = StokMitra::selectRaw('SUM(CASE WHEN jenis = "Masuk" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Keluar" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Penjualan" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Return" AND konfirmasi = "1" THEN jumlah ELSE 0 END) AS total_jumlah')
                     ->where('id_user', $user->id)

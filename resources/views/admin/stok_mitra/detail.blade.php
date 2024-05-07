@@ -54,6 +54,7 @@
                                 <th>ID</th>
                                 <th style="width:100px;">Foto Produk</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jumlah</th>
 
                             </tr>
@@ -64,8 +65,8 @@
                                 <th>ID</th>
                                 <th style="width:100px;">Foto Produk</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jumlah</th>
-
                             </tr>
                         </tfoot>
                     </table>
@@ -87,7 +88,6 @@
                                 <th>ID</th>
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
-
                                 <th>Jumlah</th>
                             </tr>
                         </thead>
@@ -127,6 +127,10 @@
                                 </select>
                             </div>
                             <div class="mb-3">
+                                <label for="formTambahStokStokVarian" class="form-label">Pilih Varian</label>
+                                <select id="formTambahStokStokVarian" class="form-select" name="id_varian"></select>
+                            </div>
+                            <div class="mb-3">
                                 <label for="formTambahStokJumlah" class="form-label">Jumlah</label>
                                 <input type="number" class="form-control" id="formTambahStokJumlah" name="jumlah"
                                     required>
@@ -153,14 +157,18 @@
                             <input type="hidden" name="id_user" id="idUserMitra" value="{{ Auth::id() }}">
                             <input type="hidden" name="jenis" id="jenis" value="Return">
                             <div class="mb-3">
-                                <label for="formSelectProduk" class="form-label">Produk</label>
-                                <select class="form-select" id="formSelectProduk" name="id_produk">
+                                <label for="formReturnSelectProduk" class="form-label">Produk</label>
+                                <select class="form-select" id="formReturnSelectProduk" name="id_produk">
                                     @foreach (App\Models\StokMitra::select('id_produk')->selectRaw('id_produk')->with('produk')->where('id_user', Auth::id())->groupBy('id_produk')->get() as $item)
                                         <option value="{{ $item->produk->id }}">{{ $item->produk->jenis->jenis }} -
                                             {{ $item->produk->nama_produk }}
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formReturnStokVarian" class="form-label">Pilih Varian</label>
+                                <select id="formReturnStokVarian" class="form-select" name="id_varian"></select>
                             </div>
                             <div class="mb-3">
                                 <label for="formReturnStokJumlah" class="form-label">Jumlah</label>
@@ -192,6 +200,10 @@
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formPenjualanVarian" class="form-label">Pilih Varian</label>
+                                <select id="formPenjualanVarian" class="form-select" name="id_varian"></select>
                             </div>
                             <div class="mb-3">
                                 <label for="formPenjualanJumlah" class="form-label">Jumlah</label>
@@ -230,6 +242,10 @@
                     {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'varian',
+                        name: 'varian'
                     },
 
                     {
@@ -278,9 +294,70 @@
             $('.create-new').click(function() {
                 $('#tambahStok').modal('show');
             });
+            $('#formPenjualanIdProduk').change(function() {
+                var id_produk = $(this).val();
+                $.ajax({
+                    url: '/varian-list/' + id_produk,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var dropdown = $('#formPenjualanVarian');
+                        dropdown.empty();
+                        $.each(response, function(index, varian) {
+                            dropdown.append($('<option></option>').attr('value', varian
+                                .id).text(varian.nama + '  [' + varian.ukuran +
+                                '] - Stok : ' + varian.stok));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+            $('#formSelectProduk').change(function() {
+                var id_produk = $(this).val();
+                $.ajax({
+                    url: '/varian-list/' + id_produk,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var dropdown = $('#formTambahStokStokVarian');
+                        dropdown.empty();
+                        $.each(response, function(index, varian) {
+                            dropdown.append($('<option></option>').attr('value', varian
+                                .id).text(varian.nama + '  [' + varian.ukuran +
+                                '] - Stok : ' + varian.stok));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+            $('#formReturnSelectProduk').change(function() {
+                var id_produk = $(this).val();
+                $.ajax({
+                    url: '/varian-list/' + id_produk,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        var dropdown = $('#formReturnStokVarian');
+                        dropdown.empty();
+                        $.each(response, function(index, varian) {
+                            dropdown.append($('<option></option>').attr('value', varian
+                                .id).text(varian.nama + '  [' + varian.ukuran +
+                                '] - Stok : ' + varian.stok));
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
             $('#btnPenjualan').click(function() {
                 var jumlah = $('#formPenjualanJumlah').val();
                 var id_produk = $('#formPenjualanIdProduk').val();
+                var id_varian = $('#formPenjualanVarian').val();
 
                 $.ajax({
                     type: 'POST',
@@ -288,6 +365,7 @@
                     data: {
                         jumlah: jumlah,
                         id_produk: id_produk,
+                        id_varian: id_varian,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
@@ -307,6 +385,7 @@
                 var jumlah = $('#formReturnStokJumlah').val();
                 var id_produk = $('#formSelectProduk').val();
                 var id_user = $('#idUserMitra').val();
+                var id_varian = $('#formReturnStokVarian').val();
 
                 $.ajax({
                     type: 'POST',
@@ -315,6 +394,7 @@
                         jumlah: jumlah,
                         id_produk: id_produk,
                         id_user: id_user,
+                        id_varian: id_varian,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
@@ -334,6 +414,7 @@
                 var jumlah = $('#formTambahStokJumlah').val();
                 var id_produk = $('#formSelectProduk').val();
                 var id_user = $('#idUser').val();
+                var id_varian = $('#formTambahStokStokVarian').val();
 
                 $.ajax({
                     type: 'POST',
@@ -342,6 +423,7 @@
                         jumlah: jumlah,
                         id_produk: id_produk,
                         id_user: id_user,
+                        id_varian: id_varian,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {

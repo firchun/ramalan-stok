@@ -93,9 +93,10 @@ class StokController extends Controller
             })
             ->addColumn('varian', function ($stok) {
                 $varian = Varian::find($stok->id_varian);
-                return $varian ? $varian->nama : null;
+                $text = '<b>' . $varian->nama . '</b><br>Ukuran : ' . $varian->ukuran;
+                return $varian ? $text : null;
             })
-            ->rawColumns(['jenis_txt', 'tanggal'])
+            ->rawColumns(['jenis_txt', 'tanggal', 'varian'])
             ->make(true);
     }
 }

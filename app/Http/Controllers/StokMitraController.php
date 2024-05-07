@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Stok;
 use App\Models\StokMitra;
 use App\Models\User;
+use App\Models\Varian;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,11 +39,11 @@ class StokMitraController extends Controller
     }
     public function getStokMitraDataTable($id_user)
     {
-        $stok = StokMitra::select('id_produk')
+        $stok = StokMitra::select('id_produk', 'id_varian')
             ->selectRaw('SUM(CASE WHEN jenis = "Masuk" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Keluar" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Penjualan" THEN jumlah ELSE 0 END) - SUM(CASE WHEN jenis = "Return" AND konfirmasi = "1" THEN jumlah ELSE 0 END) AS total_jumlah')
             ->where('id_user', $id_user)
             ->with(['produk', 'user'])
-            ->groupBy('id_produk');
+            ->groupBy('id_produk', 'id_varian');
 
         return Datatables::of($stok)
 
@@ -50,13 +51,19 @@ class StokMitraController extends Controller
                 $span = '<br><span class="badge bg-primary">' . $stok->produk->jenis->jenis . '</span>';
                 return '<strong>' . $stok->produk->nama_produk . '</strong>' . $span;
             })
+            ->addColumn('varian', function ($stok) {
+                $varian = Varian::where('id_produk', $stok->id_produk)
+                    ->where('id', $stok->id_varian)
+                    ->first();
+                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+            })
             ->addColumn('foto', function ($stok) {
                 return '<img style="width:100px; height:100px; object-fit:cover;" src="' . ($stok->produk->foto_produk == null || $stok->produk->foto_produk == '' ? asset('/img/logo.png') : Storage::url($stok->produk->foto_produk)) . '"/>';
             })
             ->addColumn('action', function ($stok) {
                 return '<img style="width:100px; height:100px; object-fit:cover;" src="' . ($stok->produk->foto_produk == null || $stok->produk->foto_produk == '' ? asset('/img/logo.png') : Storage::url($stok->produk->foto_produk)) . '"/>';
             })
-            ->rawColumns(['foto', 'nama'])
+            ->rawColumns(['foto', 'nama', 'varian'])
             ->make(true);
     }
     public function getRiwayatStokMitraDataTable(Request $request, $id_user)
@@ -76,8 +83,10 @@ class StokMitraController extends Controller
                 return $stok->created_at->format('d F Y');
             })
             ->addColumn('nama', function ($stok) {
+                $varian = Varian::find($stok->id_varian);
                 $span = '<br><span class="badge bg-primary">' . $stok->jenis . '</span>';
-                return '<strong>' . $stok->produk->nama_produk . '</strong>' . $span;
+                $varian = '<br>' . $varian->nama . ' [' . $varian->ukuran . ']';
+                return '<strong>' . $stok->produk->nama_produk . '</strong>' . $span . $varian;
             })
             ->rawColumns(['nama', 'tanggal'])
             ->make(true);

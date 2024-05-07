@@ -35,7 +35,6 @@
                         </div>
                     </div>
                 @endforeach
-
                 <!-- Modal -->
                 @foreach ($produk as $item)
                     <div class="modal product-modal fade" id="product-modal{{ $item->id }}">
@@ -59,7 +58,27 @@
                                                 <p class="product-short-description">
                                                     {{ $item->keterangan_produk }}
                                                 </p>
-
+                                                <h2 class="product-title " style="margin-top: 20px;">Varian</h2>
+                                                <div class="color-swatches">
+                                                    <span>Warna:</span>
+                                                    <ul>
+                                                        @foreach (App\Models\Varian::where('id_produk', $item->id)->pluck('kode_warna')->unique() as $key => $warna)
+                                                            <li style="display:inline-block;">
+                                                                <div
+                                                                    style="background-color: {{ $warna }}; width:36px; height:36px; margin-right:5px;">
+                                                                </div>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                                <div class="product-size">
+                                                    <span>Ukuran:</span>
+                                                    <select class="form-control">
+                                                        @foreach (App\Models\Varian::where('id_produk', $item->id)->pluck('ukuran')->unique() as $key => $ukuran)
+                                                            <option>{{ $ukuran }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -69,7 +88,6 @@
                     </div>
                 @endforeach
                 <!-- /.modal -->
-
             </div>
         </div>
     </section>
