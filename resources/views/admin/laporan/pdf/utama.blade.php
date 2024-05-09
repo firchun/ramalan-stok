@@ -63,6 +63,7 @@
                         <th style="width: 15px;">ID</th>
                         <th>Tanggal</th>
                         <th>Nama Produk</th>
+                        <th>Varian</th>
                         <th>Jenis</th>
                         <th>Jumlah</th>
                         <th>Oleh</th>
@@ -75,6 +76,7 @@
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->created_at->format('d F Y') }}</td>
                             <td>{{ $item->produk->nama_produk }}</td>
+                            <td>{{ $item->varian->nama . ' [' . $item->varian->ukuran . ' ]' }}</td>
                             <td>{{ $item->jenis }}</td>
                             <td>{{ $item->jumlah }}</td>
                             <td>{{ $item->user->name }}</td>

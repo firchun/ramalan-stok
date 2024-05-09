@@ -63,6 +63,7 @@
                         <th style="width: 15px;">ID</th>
                         <th>Tanggal</th>
                         <th>Nama Produk</th>
+                        <th>Varian</th>
                         <th>Jenis</th>
                         <th>Jumlah</th>
                     </tr>
@@ -74,7 +75,9 @@
                             <td>{{ $item->id }}</td>
                             <td>{{ $item->created_at->format('d F Y') }}</td>
                             <td>{{ $item->produk->nama_produk }}</td>
-                            <td>{{ $item->jenis }}</td>
+                            <td>{{ $item->varian->nama . ' [' . $item->varian->ukuran . ' ]' }}</td>
+                            <td>{{ $item->konfirmasi == 0 && $item->jenis == 'Return' ? 'Return (Remaining)' : $item->jenis }}
+                            </td>
                             <td>{{ $item->jumlah }}</td>
                         </tr>
                     @endforeach

@@ -52,6 +52,8 @@ Route::middleware(['auth:web'])->group(function () {
     //produk managemen
     Route::get('/produk/mitra', [ProdukController::class, 'mitra'])->name('produk.mitra');
     Route::get('/produk-datatable', [ProdukController::class, 'getProdukDataTable']);
+    //list
+    Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
 });
 Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //user managemen
@@ -76,7 +78,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/jenis_produk-datatable', [ProdukController::class, 'getjenisProdukDataTable']);
     //varian managemen
     Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
-    Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
+    // Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
     Route::post('/varian/store', [VarianController::class, 'store'])->name('varian.store');
     //stok managemen
     Route::get('/stok', [StokController::class, 'index'])->name('stok');

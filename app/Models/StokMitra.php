@@ -19,4 +19,8 @@ class StokMitra extends Model
     {
         return $this->belongsTo(Produk::class, 'id_produk');
     }
+    public function varian(): BelongsTo
+    {
+        return $this->belongsTo(Varian::class, 'id_varian');
+    }
 }

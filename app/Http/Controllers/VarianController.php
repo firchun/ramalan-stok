@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Stok;
+use App\Models\StokMitra;
 use App\Models\Varian;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Svg\Tag\Rect;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -14,23 +16,43 @@ class VarianController extends Controller
     {
         $data = Varian::where('id_produk', $id_produk)->get();
         foreach ($data as $item) {
-            $jumlah_bertambah = Stok::where('id_produk', $id_produk)
-                ->where('id_varian', $item->id)
-                ->where('jenis', 'Masuk')
-                ->sum('jumlah');
-            $jumlah_berkurang = Stok::where('id_produk', $id_produk)
-                ->where('id_varian', $item->id)
-                ->where('jenis', 'Keluar')
-                ->sum('jumlah');
-            $jumlah_penjualan = Stok::where('id_produk', $id_produk)
-                ->where('id_varian', $item->id)
-                ->where('jenis', 'Penjualan')
-                ->sum('jumlah');
-            $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
+            $role = Auth::user()->role ?? '';
+
+            if ($role == 'Mitra') {
+                $jumlah_bertambah = StokMitra::where('id_produk', $id_produk)
+                    ->where('id_varian', $item->id)
+                    ->where('jenis', 'Masuk')
+                    ->sum('jumlah');
+                $jumlah_berkurang = StokMitra::where('id_produk', $id_produk)
+                    ->where('id_varian', $item->id)
+                    ->whereIn('jenis', ['Keluar', 'Penjualan'])
+                    ->sum('jumlah');
+                $jumlah_return = StokMitra::where('id_produk', $id_produk)
+                    ->where('id_varian', $item->id)
+                    ->where('jenis', 'Return')
+                    ->where('konfirmasi', 1)
+                    ->sum('jumlah');
+                $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_return;
+            } else {
+                $jumlah_bertambah = Stok::where('id_produk', $id_produk)
+                    ->where('id_varian', $item->id)
+                    ->where('jenis', 'Masuk')
+                    ->sum('jumlah');
+                $jumlah_berkurang = Stok::where('id_produk', $id_produk)
+                    ->where('id_varian', $item->id)
+                    ->whereIn('jenis', ['Keluar', 'Penjualan'])
+                    ->sum('jumlah');
+                $jumlah = $jumlah_bertambah - $jumlah_berkurang;
+            }
+
             $item->stok = $jumlah;
         }
         return response()->json($data);
     }
+
+
+
+
     public function getVarianDataTable($id_produk)
     {
         $Varian = Varian::with('produk')->where('id_produk', $id_produk)->orderByDesc('id');

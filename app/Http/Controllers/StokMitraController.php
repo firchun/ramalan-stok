@@ -88,7 +88,13 @@ class StokMitraController extends Controller
                 $varian = '<br>' . $varian->nama . ' [' . $varian->ukuran . ']';
                 return '<strong>' . $stok->produk->nama_produk . '</strong>' . $span . $varian;
             })
-            ->rawColumns(['nama', 'tanggal'])
+            ->addColumn('varian', function ($stok) {
+                $varian = Varian::where('id_produk', $stok->id_produk)
+                    ->where('id', $stok->id_varian)
+                    ->first();
+                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+            })
+            ->rawColumns(['nama', 'tanggal', 'varian'])
             ->make(true);
     }
     public function getAllStokMitraDataTable(Request $request)
@@ -123,7 +129,13 @@ class StokMitraController extends Controller
             ->addColumn('return', function ($stok) {
                 return view('admin.stok_mitra.action_return', compact('stok'));
             })
-            ->rawColumns(['nama', 'tanggal'])
+            ->addColumn('varian', function ($stok) {
+                $varian = Varian::where('id_produk', $stok->id_produk)
+                    ->where('id', $stok->id_varian)
+                    ->first();
+                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+            })
+            ->rawColumns(['nama', 'tanggal', 'varian'])
             ->make(true);
     }
     public function getReturnStokMitraDataTable()
@@ -136,6 +148,12 @@ class StokMitraController extends Controller
 
             ->addColumn('tanggal', function ($stok) {
                 return $stok->created_at->format('d F Y');
+            })
+            ->addColumn('varian', function ($stok) {
+                $varian = Varian::where('id_produk', $stok->id_produk)
+                    ->where('id', $stok->id_varian)
+                    ->first();
+                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
             })
             ->addColumn('nama', function ($stok) {
                 $span = '<br><span class="badge bg-primary">' . $stok->jenis . '</span>';
@@ -193,50 +211,29 @@ class StokMitraController extends Controller
 
     public function returnStok(Request $request)
     {
-        $jumlah_bertambah = StokMitra::where('id_user', $request->id_user)
-            ->where(function ($query) use ($request) {
-                $query->where('id_varian', $request->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('id_produk', $request->id_produk)
+        $jumlah_bertambah = StokMitra::where('id_produk', $request->id_produk)
+            ->where('id_varian', $request->id_varian)
             ->where('jenis', 'Masuk')
             ->sum('jumlah');
-
-        $jumlah_berkurang = StokMitra::where('id_user', $request->id_user)
-            ->where(function ($query) use ($request) {
-                $query->where('id_varian', $request->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('id_produk', $request->id_produk)
-            ->where('jenis', 'Keluar')
+        $jumlah_berkurang = StokMitra::where('id_produk', $request->id_produk)
+            ->where('id_varian', $request->id_varian)
+            ->whereIn('jenis', ['Keluar', 'Penjualan'])
             ->sum('jumlah');
-
-        $jumlah_penjualan = StokMitra::where('id_user', $request->id_user)
-            ->where(function ($query) use ($request) {
-                $query->where('id_varian', $request->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('id_produk', $request->id_produk)
-            ->where('jenis', 'Penjualan')
-            ->sum('jumlah');
-        $jumlah_return = StokMitra::where('id_user', $request->id_user)
-            ->where(function ($query) use ($request) {
-                $query->where('id_varian', $request->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('id_produk', $request->id_produk)
+        $jumlah_return = StokMitra::where('id_produk', $request->id_produk)
+            ->where('id_varian', $request->id_varian)
             ->where('jenis', 'Return')
             ->where('konfirmasi', 1)
             ->sum('jumlah');
-        $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan -  $jumlah_return;
+        $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_return;
 
         if ($jumlah >= $request->jumlah) {
 
             $stok = new StokMitra();
             $stok->id_produk = $request->id_produk;
+            $stok->id_varian = $request->id_varian;
             $stok->jenis = 'Return';
             $stok->jumlah = $request->jumlah;
-            $stok->id_user = $request->id_user;
+            $stok->id_user = Auth::id();
             $stok->save();
             return response()->json(['message' => 'Berhasil melakukan pengajuan return']);
         } else {

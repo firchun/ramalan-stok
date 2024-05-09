@@ -49,6 +49,7 @@
                                 <th>ID</th>
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
                             </tr>
@@ -59,6 +60,7 @@
                                 <th>ID</th>
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
                             </tr>
@@ -90,6 +92,11 @@
                     {
                         data: 'produk.nama_produk',
                         name: 'produk.nama_produk'
+                    },
+
+                    {
+                        data: 'varian',
+                        name: 'varian'
                     },
 
                     {

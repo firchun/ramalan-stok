@@ -26,7 +26,9 @@
                         <thead>
                             <tr>
                                 <th style="width:100px;">ID</th>
+                                <th style="width:100px;">Foto Produk</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th style="width:100px;">Stok</th>
                             </tr>
                         </thead>
@@ -34,7 +36,9 @@
                         <tfoot>
                             <tr>
                                 <th>ID</th>
+                                <th>Foto Produk</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Stok</th>
                             </tr>
                         </tfoot>
@@ -57,8 +61,16 @@
                         name: 'id'
                     },
                     {
+                        data: 'foto',
+                        name: 'foto'
+                    },
+                    {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'varian',
+                        name: 'varian'
                     },
                     {
                         data: 'stok',

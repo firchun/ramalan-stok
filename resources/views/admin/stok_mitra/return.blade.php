@@ -28,6 +28,7 @@
                                 <th>Tanggal</th>
                                 <th>Mitra</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jumlah</th>
                                 <th>Action</th>
                             </tr>
@@ -39,6 +40,7 @@
                                 <th>Tanggal</th>
                                 <th>Mitra</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jumlah</th>
                                 <th>Action</th>
                             </tr>
@@ -96,6 +98,10 @@
                     {
                         data: 'nama',
                         name: 'nama'
+                    },
+                    {
+                        data: 'varian',
+                        name: 'varian'
                     },
                     {
                         data: 'jumlah',

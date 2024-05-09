@@ -159,6 +159,7 @@
                             <div class="mb-3">
                                 <label for="formReturnSelectProduk" class="form-label">Produk</label>
                                 <select class="form-select" id="formReturnSelectProduk" name="id_produk">
+                                    <option value="">--Pilih Produk--</option>
                                     @foreach (App\Models\StokMitra::select('id_produk')->selectRaw('id_produk')->with('produk')->where('id_user', Auth::id())->groupBy('id_produk')->get() as $item)
                                         <option value="{{ $item->produk->id }}">{{ $item->produk->jenis->jenis }} -
                                             {{ $item->produk->nama_produk }}
@@ -194,8 +195,9 @@
                             <div class="mb-3">
                                 <label for="formPenjualanIdProduk" class="form-label">Pilih Produk</label>
                                 <select class="form-select" id="formPenjualanIdProduk" name="id_produk">
+                                    <option value="">--Pilih Produk--</option>
                                     @foreach (App\Models\StokMitra::select('id_produk')->selectRaw('id_produk')->with('produk')->where('id_user', Auth::id())->groupBy('id_produk')->get() as $item)
-                                        <option value="{{ $item->produk->id }}">{{ $item->produk->jenis->jenis }} -
+                                        <option value="{{ $item->id_produk }}">{{ $item->produk->jenis->jenis }} -
                                             {{ $item->produk->nama_produk }}
                                         </option>
                                     @endforeach
@@ -383,7 +385,7 @@
             });
             $('#btnReturnStok').click(function() {
                 var jumlah = $('#formReturnStokJumlah').val();
-                var id_produk = $('#formSelectProduk').val();
+                var id_produk = $('#formReturnSelectProduk').val();
                 var id_user = $('#idUserMitra').val();
                 var id_varian = $('#formReturnStokVarian').val();
 

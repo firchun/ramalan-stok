@@ -53,12 +53,13 @@
                     <hr>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-stok" class="table table-hover table-bordered display">
+                    <table id="datatable-stok" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
                                 <th>Oleh</th>
@@ -70,6 +71,7 @@
                                 <th>ID</th>
                                 <th>Tanggal</th>
                                 <th>Nama Produk</th>
+                                <th>Varian</th>
                                 <th>Jenis</th>
                                 <th>Jumlah</th>
                                 <th>Oleh</th>
@@ -101,6 +103,10 @@
                     {
                         data: 'produk.nama_produk',
                         name: 'produk.nama_produk'
+                    },
+                    {
+                        data: 'varian',
+                        name: 'varian'
                     },
                     {
                         data: 'jenis_txt',

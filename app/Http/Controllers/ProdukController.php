@@ -128,12 +128,8 @@ class ProdukController extends Controller
             })
             ->addColumn('varian', function ($produk) {
                 $varian = Varian::where('id_produk', $produk->id)->get();
-                $text = '<ol>';
-                foreach ($varian as $item) {
-                    $text .= '<li>' . $item->nama . ' [' . $item->ukuran . ']</li>';
-                }
-                $text .= '</ol>';
-                return $text;
+
+                return view('admin.produk.components.varian', compact('produk', 'varian'));
             })
             ->addColumn('action_ramalan', function ($produk) {
                 return view('admin.peramalan.actions', compact('produk'));
