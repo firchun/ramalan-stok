@@ -69,7 +69,7 @@ class PeramalanController extends Controller
         $total_bulanan = [];
 
         //looping untuk 3 bulan
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 4; $i++) {
 
             //buat bulan berdasarkan loop (3bulan)
             $date = Carbon::create($tahun, $bulan, 1)->subMonths($i);
@@ -79,8 +79,6 @@ class PeramalanController extends Controller
             //membuat tanggal awal dan tanggal akhir
             $tanggal_awal = $start_date->format('Y-m-d');
             $tanggal_akhir = $end_date->format('Y-m-d');
-
-            //ambil total stok berdasarkan data penjualan
 
             //data penjualan admin
             $stok = Stok::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
@@ -94,7 +92,11 @@ class PeramalanController extends Controller
                 ->sum('jumlah');
 
             //mengambil data bulan pertama, kedua dan ketiga
-            $total_bulanan[] = ['stok' => $stok, 'stok_mitra' => $stok_mitra];
+            $total_bulanan[] = [
+                'bulan' => $date->format('F Y'),
+                'stok' => $stok,
+                'stok_mitra' => $stok_mitra
+            ];
         };
 
         //hitung perbulan
@@ -105,34 +107,45 @@ class PeramalanController extends Controller
             $total_stok_mitra += $total['stok_mitra'];
         }
 
+        //hitung total penjualan
+        $total_penjualan = ($total_stok + $total_stok_mitra) - ($total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra']);
         //hitung rata-rata
-        $total_pengeluaran = $total_stok + $total_stok_mitra;
-        $total_average = ($total_stok + $total_stok_mitra) / 3;
-
-        //hitung MSE
-        $mse = pow($total_average, 2);
-
-        // //hitung total error
-        $total_error = 0;
-        foreach ($total_bulanan as $total) {
-            $total_error += pow($total['stok'] + $total['stok_mitra'] - $total_average, 2);
-        }
-
-
+        $total_average = $total_penjualan / 3;
+        //aktual bulan ini
+        $aktual_bulan_ini = $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'];
+        //nilai error = aktual bulan ini - average
+        $error = $aktual_bulan_ini - $total_average;
+        //error kuadrat = nilai (error )^
+        $error_kuadrat = pow($error, 2);
+        //nilai SSE = total error kuadrat
+        $sse = $error_kuadrat;
+        //nilai MSE = total sse di kuadratkan
+        $mse = pow($sse, 2);
         //menampilkan data berbentuk json
         $data = [
             'id_produk' => $produk->id,
-            'total_penjualan' => $total_pengeluaran,
+            'produk' => $produk->nama_produk,
+            'total_penjualan' => $total_penjualan,
+            'aktual_bulan_ini' => $aktual_bulan_ini,
             'total_ma' => $total_average,
-            'nilai_1' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
-            'nilai_2' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
-            'nilai_3' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
+            'total_error' => $error,
+            'total_error_kuadrat' => $error_kuadrat,
+            'total_sse' => $sse,
             'total_mse' => $mse,
-            'total_error' => $total_error,
+            // 'ramalan' => $forcast,
+            'nilai_aktual_1' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
+            'nilai_aktual_2' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
+            'nilai_aktual_3' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
+            'nilai_aktual_4' => $total_bulanan[3]['stok'] + $total_bulanan[3]['stok_mitra'],
+            'bulan_1' =>  $total_bulanan[0]['bulan'],
+            'bulan_2' =>  $total_bulanan[1]['bulan'],
+            'bulan_3' =>  $total_bulanan[2]['bulan'],
+            'bulan_4' =>  $total_bulanan[3]['bulan'],
+            'tahun' => $tahun,
         ];
 
         //cek data json pada console
-        return response()->json($data);
+        return response()->json([$data, 'message' => 'Berhasil']);
 
         //menyimpan dalam database
         // $simpan = DB::insert($data);

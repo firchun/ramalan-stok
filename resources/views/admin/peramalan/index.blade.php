@@ -22,7 +22,8 @@
                         <span class="input-group-text">Bulan</span>
                         <select id="selectBulan" name="bulan" class="form-select">
                             @foreach ($bulan as $key => $value)
-                                <option value="{{ $key }}">{{ $value }}</option>
+                                <option value="{{ $key }}" {{ date('m') + 1 == $key ? 'selected' : '' }}>
+                                    {{ $value }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -43,6 +44,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="hasil-ramalan">
     </div>
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -132,10 +135,67 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        console.log(response);
-                        alert(response.message);
+                        // console.log(response);
+                        // alert(response.message);
                         $('#datatable-produk').DataTable().ajax.reload();
+
+                        // Clear existing content
+                        $('#hasil-ramalan').empty();
+                        var data = response[0];
+                        var htmlContent = '<div class="card mb-4">';
+                        htmlContent +=
+                            '<div class="card-header"><strong>Hasil Ramalan Produk ' + data
+                            .produk + ' Bulan : ' + data
+                            .bulan_1 +
+                            '</strong></div>';
+                        htmlContent +=
+                            '<div class="card-body"><table class="table table-hover table-bordered">';
+
+                        htmlContent += '<tbody>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Produk </td>';
+                        htmlContent += '<td> ' + data.produk + '</td>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_4 + '</td>';
+                        htmlContent += '<td> ' + data.nilai_aktual_4 + '</td>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_3 + '</td>';
+                        htmlContent += '<td> ' + data.nilai_aktual_3 + '</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_2 + '</td>';
+                        htmlContent += '<td> ' + data.nilai_aktual_2 + '</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_1 + '</td>';
+                        htmlContent += '<td> ' + data.nilai_aktual_1 + '</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Margin Average (MA) </td>';
+                        htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.nilai_aktual_4 +
+                            ' + ' + data
+                            .nilai_aktual_3 + ' + ' + data.nilai_aktual_2 + ')/3 <br>= ' + data
+                            .total_ma + '</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<td>Error </td>';
+                        htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
+                            .total_ma + '<sup>2</sup> <br> = ' + data
+                            .total_error + '</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '</tbody></table>';
+                        htmlContent +=
+                            '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
+                            data.bulan_1 + ', adalah sebanyak : ' + data.total_ma +
+                            ' </h4>';
+                        htmlContent += '</div>';
+                        htmlContent += '</div>';
+
+                        // Append HTML content to the container
+                        $('#hasil-ramalan').append(htmlContent);
+
                     },
+
                     error: function(xhr) {
                         alert('Terjadi kesalahan: ' + xhr.responseText);
                     }
