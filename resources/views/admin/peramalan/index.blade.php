@@ -141,6 +141,7 @@
 
                         // Clear existing content
                         $('#hasil-ramalan').empty();
+
                         var data = response[0];
                         var htmlContent = '<div class="card mb-4">';
                         htmlContent +=
@@ -172,7 +173,7 @@
                         htmlContent += '<td> ' + data.nilai_aktual_1 + '</td>';
                         htmlContent += '</tr>';
                         htmlContent += '<tr>';
-                        htmlContent += '<td>Margin Average (MA) </td>';
+                        htmlContent += '<td>Moving Average (MA) </td>';
                         htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.nilai_aktual_4 +
                             ' + ' + data
                             .nilai_aktual_3 + ' + ' + data.nilai_aktual_2 + ')/3 <br>= ' + data
