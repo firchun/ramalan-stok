@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('id_produk');
             $table->string('kode_warna');
             $table->string('nama');
-            $table->enum('ukuran', ['S', 'M', 'XL', 'XXL', 'XXXL', 'XXXXL', 'ALL SIZE'])->default('ALL SIZE');
+            $table->enum('ukuran', ['S', 'M', 'XL', 'XXL', 'XXXL', 'XXXXL', 'ALL SIZE'])->default('ALL SIZE')->nullable();
             $table->timestamps();
 
             $table->foreign('id_produk')->references('id')->on('produk');

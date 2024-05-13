@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $produk = Produk::with(['jenis'])->latest()->get();
+    $produk = Produk::with(['jenis'])->latest()->paginate(12);
     return view('pages.index', ['produk' => $produk, 'title' => 'Beranda']);
 });
 
@@ -80,6 +80,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
     // Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
     Route::post('/varian/store', [VarianController::class, 'store'])->name('varian.store');
+    Route::delete('/varian/delete/{id}', [VarianController::class, 'destroy'])->name('varian.delete');
     //stok managemen
     Route::get('/stok', [StokController::class, 'index'])->name('stok');
     Route::post('/stok/store',  [StokController::class, 'store'])->name('stok.store');

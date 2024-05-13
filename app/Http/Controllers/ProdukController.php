@@ -6,6 +6,7 @@ use App\Models\JenisProduk;
 use App\Models\Peramalan;
 use App\Models\Produk;
 use App\Models\Stok;
+use App\Models\StokMitra;
 use App\Models\Varian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -127,7 +128,7 @@ class ProdukController extends Controller
                 return view('admin.produk.components.actions', compact('produk'));
             })
             ->addColumn('varian', function ($produk) {
-                $varian = Varian::where('id_produk', $produk->id)->get();
+                $varian = Varian::where('id_produk', $produk->id);
 
                 return view('admin.produk.components.varian', compact('produk', 'varian'));
             })
@@ -187,13 +188,31 @@ class ProdukController extends Controller
     }
     public function destroy($id)
     {
-        $customers = Produk::find($id);
+        $produk = Produk::find($id);
+        $varian = Varian::where('id_produk', $produk->id);
+        $stok = Stok::where('id_produk', $produk->id);
+        $stok_mitra = StokMitra::where('id_produk', $produk->id);
+        if ($varian) {
+            foreach ($varian->get() as $item) {
+                $varian_stok = Stok::where('id_varian', $item->id);
+                $varian_stok_mitra = StokMitra::where('id_varian', $item->id);
+                $varian_stok->delete();
+                $varian_stok_mitra->delete();
+            }
 
-        if (!$customers) {
+            $varian->delete();
+        }
+        if ($stok) {
+            $stok->delete();
+        }
+        if ($stok_mitra) {
+            $stok_mitra->delete();
+        }
+        if (!$produk) {
             return response()->json(['message' => ' Produk not found'], 404);
         }
 
-        $customers->delete();
+        $produk->delete();
 
         return response()->json(['message' => 'Customer deleted successfully']);
     }

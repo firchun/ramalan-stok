@@ -89,7 +89,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="formUkuranVarian" class="form-label">Ukuran</label>
-                            <select class="form-select" name="ukuran" id="formUkuranVarian" required>
+                            <select class="form-select" name="ukuran" id="formUkuranVarian">
                                 <option value="S">S</option>
                                 <option value="M">M</option>
                                 <option value="L">L</option>
@@ -99,6 +99,17 @@
                                 <option value="XXXXL">XXXXL</option>
                                 <option value="ALL SIZE">All Size</option>
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formJenisVarian" class="form-label">Jenis</label>
+                            <select class="form-select" name="jenis" id="formJenisVarian" required>
+                                <option value="ukuran">Ukuran</option>
+                                <option value="nomor">Nomor</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formNomorVarian" class="form-label">Nomor</label>
+                            <input type="number" class="form-control" id="FormNomorVarian" name="nomor">
                         </div>
                         <button type="button" class="btn btn-sm btn-primary" id="btnSimpanVarian"><i
                                 class="bx bx-plus"></i> Tambah</button>
@@ -204,6 +215,31 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="btnPenjualan">Jual</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="lihatSemuaVarian" tabindex="-1" aria-labelledby="customersModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Form for Create and Edit -->
+                <h3>Semua Varian</h3>
+                <table id="datatable-varian-2" class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nama Varian</th>
+                            <th>Ukuran</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -94,9 +94,10 @@
                         var dropdown = $('#formTambahStokVarian');
                         dropdown.empty();
                         $.each(response, function(index, varian) {
+                            let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
+                                varian.ukuran : varian.nomor) + ']';
                             dropdown.append($('<option></option>').attr('value', varian.id)
-                                .text(
-                                    varian.nama + '  [' + varian.ukuran + ']'));
+                                .text(text));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -125,8 +126,8 @@
                             name: 'warna'
                         },
                         {
-                            data: 'ukuran',
-                            name: 'ukuran'
+                            data: 'ukuran_text',
+                            name: 'ukuran_text'
                         },
 
                         {
@@ -136,11 +137,38 @@
                     ]
                 });
             };
+            window.lihatSemuaVarian = function(id) {
+                $('#datatable-varian-2').DataTable().destroy();
+                $('#lihatSemuaVarian').modal('show');
+                $('#datatable-varian-2').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    ajax: '/varian-datatable/' + id,
+                    columns: [{
+                            data: 'id',
+                            name: 'id'
+                        },
+                        {
+                            data: 'warna',
+                            name: 'warna'
+                        },
+                        {
+                            data: 'ukuran_text',
+                            name: 'ukuran_text'
+                        },
+
+
+                    ]
+                });
+            };
             $('#btnSimpanVarian').click(function() {
                 var id_produk = $('#formVarianIdProduk').val();
                 var kode_warna = $('#formKodeWarna').val();
                 var nama = $('#FormNamaVarian').val();
                 var ukuran = $('#formUkuranVarian').val();
+                var jenis = $('#formJenisVarian').val();
+                var nomor = $('#FormNomorVarian').val();
 
                 $.ajax({
                     type: 'POST',
@@ -150,15 +178,18 @@
                         nama: nama,
                         ukuran: ukuran,
                         id_produk: id_produk,
+                        jenis: jenis,
+                        nomor: nomor,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
                         alert(response.message);
                         // console.log(response);
-                        $('#formVarianIdProduk').val('');
-                        $('#formKodeWarna').val('');
+                        // $('#formVarianIdProduk').val('');
+                        // $('#formKodeWarna').val('');
                         $('#formNamaVarian').val('');
-                        $('#formUkuranVarian').val('');
+                        // $('#formUkuranVarian').val('');
+                        $('#FormNomorVarian').val('');
                         $('#datatable-varian').DataTable().ajax.reload();
                         $('#datatable-produk').DataTable().ajax.reload();
                     },
@@ -179,11 +210,10 @@
                         var dropdown = $('#formKurangStokVarian');
                         dropdown.empty();
                         $.each(response, function(index, varian) {
+                            let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
+                                varian.ukuran : varian.nomor) + ']';
                             dropdown.append($('<option></option>').attr('value', varian.id)
-                                .text(
-                                    varian.nama + '  [' + varian.ukuran +
-                                    '] - Stok : ' +
-                                    varian.stok));
+                                .text(text));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -324,6 +354,25 @@
                         success: function(response) {
                             // alert(response.message);
                             $('#datatable-produk').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            alert('Terjadi kesalahan: ' + xhr.responseText);
+                        }
+                    });
+                }
+            };
+            window.deleteVarian = function(id) {
+                if (confirm('Apakah Anda yakin ingin menghapus  Varian Ini?')) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/varian/delete/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            // alert(response.message);
+                            $('#datatable-produk').DataTable().ajax.reload();
+                            $('#datatable-varian').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);
