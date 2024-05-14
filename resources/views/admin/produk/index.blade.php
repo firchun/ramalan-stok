@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-produk" class="table table-hover table-bordered display">
+                    <table id="datatable-produk" class="table table-sm table-hover table-bordered display">
                         <thead>
                             <tr>
                                 <th>ID</th>

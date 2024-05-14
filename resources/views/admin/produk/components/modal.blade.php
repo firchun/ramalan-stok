@@ -8,15 +8,23 @@
             </div>
             <div class="modal-body">
                 <!-- Form for Create and Edit -->
-                <form id="produkForm">
+                <form id="produkForm" enctype="multipart/form-data">
                     <input type="hidden" id="formProdukId" name="id">
-                    <div class="mb-3">
-                        <label for="formNamaProduk" class="form-label">Nama Produk</label>
-                        <input type="text" class="form-control" id="formNamaProduk" name="nama_produk" required>
+                    <div class="mb-3 d-flex justify-content-center">
+                        <img src="" id="viewFotoForUpdate"
+                            style="height: 200px; width:200px; object-fit:cover; display:none;" />
                     </div>
                     <div class="mb-3">
-                        <label for="formKeteranganProduk" class="form-label">Keterangan Produk</label>
-                        <textarea class="form-control" id="formKeteranganProduk" name="keterangan_produk"></textarea>
+                        <label for="formEditFotoProduk" class="form-label">Foto Produk</label>
+                        <input type="file" class="form-control" id="formEditFotoProduk" name="foto_produk" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formNamaEditProduk" class="form-label">Nama Produk</label>
+                        <input type="text" class="form-control" id="formNamaEditProduk" name="nama_produk" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formEditKeteranganProduk" class="form-label">Keterangan Produk</label>
+                        <textarea class="form-control" id="formEditKeteranganProduk" name="keterangan_produk"></textarea>
                     </div>
 
                 </form>

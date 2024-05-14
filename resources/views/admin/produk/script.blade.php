@@ -72,9 +72,18 @@
                     type: 'GET',
                     url: '/produk/edit/' + id,
                     success: function(response) {
+                        //foto
+                        if (response.foto_produk != null) {
+                            $('#viewFotoForUpdate').css('display', 'block');
+                            var fotoUrl = response.foto_url;
+                            $('#viewFotoForUpdate').attr('src', fotoUrl);
+                        } else {
+                            $('#viewFotoForUpdate').css('display', 'none');
+
+                        }
                         $('#formProdukId').val(response.id);
-                        $('#formNamaProduk').val(response.nama_produk);
-                        $('#formKeteranganProduk').val(response.keterangan_produk);
+                        $('#formNamaEditProduk').val(response.nama_produk);
+                        $('#formEditKeteranganProduk').val(response.keterangan_produk);
                         $('#customersModal').modal('show');
                     },
                     error: function(xhr) {
@@ -302,12 +311,14 @@
                 });
             });
             $('#saveProdukBtn').click(function() {
-                var formData = $('#produkForm').serialize()[0];
+                var formData = new FormData($('#produkForm')[0]);
 
                 $.ajax({
                     type: 'POST',
                     url: '/produk/store',
                     data: formData,
+                    processData: false,
+                    contentType: false,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -315,6 +326,7 @@
                         alert(response.message);
                         // Refresh DataTable setelah menyimpan perubahan
                         $('#datatable-produk').DataTable().ajax.reload();
+                        $('#formEditFotoProduk').val('');
                         $('#customersModal').modal('hide');
                     },
                     error: function(xhr) {

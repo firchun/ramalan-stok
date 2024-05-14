@@ -147,18 +147,32 @@ class ProdukController extends Controller
     }
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_produk' => 'required|string|max:255',
-            'id_jenis_produk' => 'required|string',
-            'keterangan_produk' => 'required|string',
-            'foto_produk' => 'image|mimes:jpeg,png,jpg,gif|max:5048',
-        ]);
+        if ($request->filled('id')) {
+            $request->validate([
+                'nama_produk' => 'string|max:255',
+                'id_jenis_produk' => 'string',
+                'keterangan_produk' => 'string',
+                'foto_produk' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            ]);
+            $produkData = [
+                'nama_produk' => $request->input('nama_produk'),
+                'keterangan_produk' => $request->input('keterangan_produk'),
+            ];
+        } else {
 
-        $produkData = [
-            'nama_produk' => $request->input('nama_produk'),
-            'id_jenis_produk' =>  $request->input('id_jenis_produk'),
-            'keterangan_produk' => $request->input('keterangan_produk'),
-        ];
+            $request->validate([
+                'nama_produk' => 'required|string|max:255',
+                'id_jenis_produk' => 'required|string',
+                'keterangan_produk' => 'required|string',
+                'foto_produk' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            ]);
+            $produkData = [
+                'nama_produk' => $request->input('nama_produk'),
+                'id_jenis_produk' =>  $request->input('id_jenis_produk'),
+                'keterangan_produk' => $request->input('keterangan_produk'),
+            ];
+        }
+
         if ($request->hasFile('foto_produk')) {
             $filename = Str::random(32) . '.' . $request->file('foto_produk')->getClientOriginalExtension();
 
@@ -223,6 +237,8 @@ class ProdukController extends Controller
         if (!$customer) {
             return response()->json(['message' => ' Produk not found'], 404);
         }
+        $foto_url = Storage::url($customer->foto_produk);
+        $customer['foto_url'] = $foto_url;
 
         return response()->json($customer);
     }

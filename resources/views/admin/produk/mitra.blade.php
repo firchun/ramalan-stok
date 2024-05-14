@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-produk" class="table table-hover table-bordered display">
+                    <table id="datatable-produk" class="table table-sm table-hover table-bordered display">
                         <thead>
                             <tr>
                                 <th style="width:100px;">ID</th>
@@ -43,6 +43,31 @@
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="lihatSemuaVarian" tabindex="-1" aria-labelledby="customersModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <!-- Form for Create and Edit -->
+                    <h3>Semua Varian</h3>
+                    <table id="datatable-varian-2" class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama Varian</th>
+                                <th>Ukuran</th>
+                                <th>Stok</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -82,7 +107,35 @@
             $('.refresh').click(function() {
                 $('#datatable-produk').DataTable().ajax.reload();
             });
+            window.lihatSemuaVarian = function(id) {
+                $('#datatable-varian-2').DataTable().destroy();
+                $('#lihatSemuaVarian').modal('show');
+                $('#datatable-varian-2').DataTable({
+                    processing: true,
+                    serverSide: true,
+                    responsive: true,
+                    ajax: '/varian-datatable/' + id,
+                    columns: [{
+                            data: 'id',
+                            name: 'id'
+                        },
+                        {
+                            data: 'warna',
+                            name: 'warna'
+                        },
+                        {
+                            data: 'ukuran_text',
+                            name: 'ukuran_text'
+                        },
+                        {
+                            data: 'jumlah',
+                            name: 'jumlah'
+                        },
 
+
+                    ]
+                });
+            };
 
 
         });

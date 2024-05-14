@@ -54,6 +54,8 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/produk-datatable', [ProdukController::class, 'getProdukDataTable']);
     //list
     Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
+    //varian
+    Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
 });
 Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //user managemen
@@ -77,7 +79,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::delete('/jenis_produk/delete/{id}',  [ProdukController::class, 'destroyJenis'])->name('jenis_produk.delete');
     Route::get('/jenis_produk-datatable', [ProdukController::class, 'getjenisProdukDataTable']);
     //varian managemen
-    Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
+    // Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
     // Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
     Route::post('/varian/store', [VarianController::class, 'store'])->name('varian.store');
     Route::delete('/varian/delete/{id}', [VarianController::class, 'destroy'])->name('varian.delete');
