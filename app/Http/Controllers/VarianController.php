@@ -66,7 +66,22 @@ class VarianController extends Controller
             ->addColumn('delete', function ($Varian) {
                 return '<button type="button" onclick="deleteVarian(' . $Varian->id . ')" class="btn btn-danger btn-sm"><i class="bx bx-trash"></i></button>';
             })
-            ->rawColumns(['delete', 'warna', 'ukuran_text'])
+            ->addColumn('jumlah', function ($Varian) {
+                $jumlah_bertambah = Stok::where('id_varian', $Varian->id)
+                    ->where('jenis', 'Masuk')
+                    ->sum('jumlah');
+                $jumlah_berkurang = Stok::where('id_varian', $Varian->id)
+                    ->where('jenis', 'Keluar')
+                    ->sum('jumlah');
+                $jumlah_penjualan = Stok::where('jenis', 'Penjualan')
+                    ->where('id_varian', $Varian->id)
+                    ->sum('jumlah');
+
+                $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
+                $color = $jumlah == 0 ? 'danger' : 'primary';
+                return '<span class="badge bg-' . $color . '">' . $jumlah . '</span>';
+            })
+            ->rawColumns(['delete', 'warna', 'ukuran_text', 'jumlah'])
             ->make(true);
     }
     public function store(Request $request)

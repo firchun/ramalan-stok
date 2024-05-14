@@ -157,6 +157,10 @@
                             data: 'ukuran_text',
                             name: 'ukuran_text'
                         },
+                        {
+                            data: 'jumlah',
+                            name: 'jumlah'
+                        },
 
 
                     ]

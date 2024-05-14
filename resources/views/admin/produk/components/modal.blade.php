@@ -232,6 +232,7 @@
                             <th>#</th>
                             <th>Nama Varian</th>
                             <th>Ukuran</th>
+                            <th>Stok</th>
                         </tr>
                     </thead>
                     <tbody>
