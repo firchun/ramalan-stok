@@ -146,6 +146,26 @@
                     ]
                 });
             };
+            window.updateVarian = function(id) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/varian/edit/' + id,
+                    success: function(response) {
+
+                        $('#formUpdateVarianId').val(response.id);
+                        $('#formUpdateVarianIdProduk').val(response.id_produk);
+                        $('#formUpdateNamaVarian').val(response.nama);
+                        $('#formUpdateKodeWarna').val(response.kode_warna);
+                        $('#FormUpdateNomorVarian').val(response.nomor);
+
+                        $('#updateVarian').modal('show');
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                    }
+                });
+
+            };
             window.lihatSemuaVarian = function(id) {
                 $('#datatable-varian-2').DataTable().destroy();
                 $('#lihatSemuaVarian').modal('show');
@@ -175,6 +195,39 @@
                     ]
                 });
             };
+            $('#btnUpdateVarian').click(function() {
+                var id = $('#formUpdateVarianId').val();
+                var id_produk = $('#formUpdateVarianIdProduk').val();
+                var kode_warna = $('#formUpdateKodeWarna').val();
+                var nama = $('#formUpdateNamaVarian').val();
+                var ukuran = $('#formUpdateUkuranVarian').val();
+                var jenis = $('#formUpdateJenisVarian').val();
+                var nomor = $('#FormUpdateNomorVarian').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/varian/store',
+                    data: {
+                        kode_warna: kode_warna,
+                        nama: nama,
+                        ukuran: ukuran,
+                        id: id,
+                        id_produk: id_produk,
+                        jenis: jenis,
+                        nomor: nomor,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        alert(response.message);
+                        $('#updateVarian').modal('hide');
+                        $('#datatable-varian').DataTable().ajax.reload();
+                        $('#datatable-produk').DataTable().ajax.reload();
+                    },
+                    error: function(xhr) {
+                        alert('Terjadi kesalahan: ' + xhr.responseText);
+                    }
+                });
+            });
             $('#btnSimpanVarian').click(function() {
                 var id_produk = $('#formVarianIdProduk').val();
                 var kode_warna = $('#formKodeWarna').val();

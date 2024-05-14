@@ -64,7 +64,8 @@ class VarianController extends Controller
                 return $Varian->jenis == 'nomor' ? $Varian->nomor : $Varian->ukuran;
             })
             ->addColumn('delete', function ($Varian) {
-                return '<button type="button" onclick="deleteVarian(' . $Varian->id . ')" class="btn btn-danger btn-sm"><i class="bx bx-trash"></i></button>';
+                $edit_button = '<button type="button" onclick="updateVarian(' . $Varian->id . ')" class="btn btn-warning btn-sm mx-2"><i class="bx bx-edit"></i></button>';
+                return $edit_button . '<button type="button" onclick="deleteVarian(' . $Varian->id . ')" class="btn btn-danger btn-sm"><i class="bx bx-trash"></i></button>';
             })
             ->addColumn('jumlah', function ($Varian) {
                 $jumlah_bertambah = Stok::where('id_varian', $Varian->id)
@@ -147,5 +148,13 @@ class VarianController extends Controller
         $Varian->delete();
 
         return response()->json(['message' => 'Varian deleted successfully']);
+    }
+    public function edit($id)
+    {
+        $Varian = Varian::find($id);
+        if (!$Varian) {
+            return response()->json(['message' => 'Varian not found'], 404);
+        }
+        return response()->json($Varian);
     }
 }

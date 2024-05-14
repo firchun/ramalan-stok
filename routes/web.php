@@ -60,6 +60,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/produk-datatable', [ProdukController::class, 'getProdukDataTable']);
     //list
     Route::get('/varian-list/{id}', [VarianController::class, 'listApi'])->name('varian-list');
+    Route::get('/varian/edit/{id}', [VarianController::class, 'edit'])->name('varian.edit');
     //varian
     Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
 });

@@ -253,3 +253,55 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="updateVarian" tabindex="-1" aria-labelledby="customersModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <!-- Form for Create and Edit -->
+                <form id="formUpdateVarianProduk" enctype="multipart/form-data">
+                    <h3>Update Varian</h3>
+                    <input type="hidden" id="formUpdateVarianId" name="id">
+                    <input type="hidden" id="formUpdateVarianIdProduk" name="id_produk">
+                    <div class="mb-3">
+                        <label for="formUpdateNamaVarian" class="form-label">Nama Varian</label>
+                        <input type="text" class="form-control" id="formUpdateNamaVarian" name="nama"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formUpdateKodeWarna" class="form-label">Warna</label>
+                        <input type="color" class="form-control" id="formUpdateKodeWarna" name="kode_warna"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formUpdateUkuranVarian" class="form-label">Ukuran</label>
+                        <select class="form-select" name="ukuran" id="formUpdateUkuranVarian">
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="XXXL">XXXL</option>
+                            <option value="XXXXL">XXXXL</option>
+                            <option value="ALL SIZE">All Size</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formUpdateJenisVarian" class="form-label">Jenis</label>
+                        <select class="form-select" name="jenis" id="formUpdateJenisVarian" required>
+                            <option value="ukuran">Ukuran</option>
+                            <option value="nomor">Nomor</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="FormUpdateNomorVarian" class="form-label">Nomor</label>
+                        <input type="number" class="form-control" id="FormUpdateNomorVarian" name="nomor">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnUpdateVarian">Simpan</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
