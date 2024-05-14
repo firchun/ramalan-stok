@@ -3,13 +3,22 @@
 @section('content')
     <section class="products section bg-gray">
         <div class="container">
-            <div class="row">
-                <div class="title text-center">
-                    <h2>Daftar Produk</h2>
+            <form action="{{ url('/search-produk') }}" method="GET">
+                <div class="my-2 row justify-content-center">
+                    <div class="col-lg-10 col-md-8 col-6">
+                        <input type="text" name="search" class="form-control" placeholder="Cari Produk disini..."
+                            value="{{ $searchInput ?? '' }}">
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-6 mt-2">
+                        <button type="submit" class="btn btn-main btn-block">Cari</button>
+                    </div>
                 </div>
+            </form>
+            <div class="title text-center">
+                <h2>Daftar Produk</h2>
             </div>
-            <div class="row">
-                @foreach ($produk as $item)
+            <div class="row d-flex justify-items-center">
+                @forelse ($produk as $item)
                     <div class="col-md-4">
                         <div class="product-item">
                             <div class="product-thumb">
@@ -29,15 +38,22 @@
                                 </div>
                             </div>
                             <div class="product-content">
-                                <h4><a href="product-single.html">{{ $item->nama_produk }}</a></h4>
+                                <h4><a href="#" data-toggle="modal"
+                                        data-target="#product-modal{{ $item->id }}">{{ $item->nama_produk }}</a></h4>
                             </div>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-12">
+                        <div class="text-muted text-center">
+                            Belum ada produk
+                        </div>
+                    </div>
+                @endforelse
             </div>
             <div class="text-center mt-4">
-
                 {{ $produk->links('vendor.pagination.bootstrap-4') }}
+
             </div>
             <!-- Modal -->
             @foreach ($produk as $item)

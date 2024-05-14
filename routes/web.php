@@ -11,6 +11,7 @@ use App\Http\Controllers\StokMitraController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VarianController;
 use App\Models\Produk;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $produk = Produk::with(['jenis'])->latest()->paginate(12);
     return view('pages.index', ['produk' => $produk, 'title' => 'Beranda']);
+});
+Route::get('/search-produk', function (Request $request) {
+    $search = $request->input('search');
+    $produk = Produk::with(['jenis'])->where('nama_produk', 'like', '%' . $search . '%')->latest()->paginate(12);
+    return view('pages.index', ['produk' => $produk, 'title' => 'Search : ' . $search, 'searchInput' => $search]);
 });
 
 Auth::routes();
