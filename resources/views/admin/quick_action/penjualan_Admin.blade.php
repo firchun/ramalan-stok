@@ -52,7 +52,7 @@
                     dropdown.empty();
                     $.each(response, function(index, varian) {
                         let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
-                                varian.ukuran : varian.nomor) + '] Sok : '.varian
+                                varian.ukuran : varian.nomor) + '] Sok : ' + varian
                             .stok;
                         dropdown.append($('<option></option>').attr('value', varian
                                 .id)
