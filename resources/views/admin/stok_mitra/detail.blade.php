@@ -234,7 +234,7 @@
                 ajax: '{{ url('stok-mitra-datatable', $user->id) }}',
                 columns: [{
                         data: 'id_produk',
-                        name: 'id_produk'
+                        name: 'id_produk',
                     },
 
                     {
@@ -243,7 +243,8 @@
                     },
                     {
                         data: 'nama',
-                        name: 'nama'
+                        name: 'nama',
+                        searchable: true,
                     },
                     {
                         data: 'varian',
@@ -252,7 +253,8 @@
 
                     {
                         data: 'total_jumlah',
-                        name: 'total_jumlah'
+                        name: 'total_jumlah',
+                        searchable: false,
                     },
                 ]
             });
@@ -306,9 +308,11 @@
                         var dropdown = $('#formPenjualanVarian');
                         dropdown.empty();
                         $.each(response, function(index, varian) {
+                            let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
+                                varian.ukuran : varian.nomor) + ']';
                             dropdown.append($('<option></option>').attr('value', varian
-                                .id).text(varian.nama + '  [' + varian.ukuran +
-                                '] - Stok : ' + varian.stok));
+                                    .id)
+                                .text(text));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -326,9 +330,11 @@
                         var dropdown = $('#formTambahStokStokVarian');
                         dropdown.empty();
                         $.each(response, function(index, varian) {
+                            let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
+                                varian.ukuran : varian.nomor) + ']';
                             dropdown.append($('<option></option>').attr('value', varian
-                                .id).text(varian.nama + '  [' + varian.ukuran +
-                                '] - Stok : ' + varian.stok));
+                                    .id)
+                                .text(text));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -346,9 +352,11 @@
                         var dropdown = $('#formReturnStokVarian');
                         dropdown.empty();
                         $.each(response, function(index, varian) {
+                            let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
+                                varian.ukuran : varian.nomor) + ']';
                             dropdown.append($('<option></option>').attr('value', varian
-                                .id).text(varian.nama + '  [' + varian.ukuran +
-                                '] - Stok : ' + varian.stok));
+                                    .id)
+                                .text(text));
                         });
                     },
                     error: function(xhr, status, error) {

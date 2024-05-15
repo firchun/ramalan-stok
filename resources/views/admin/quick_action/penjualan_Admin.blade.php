@@ -51,10 +51,11 @@
                     var dropdown = $('#formPenjualanVarian');
                     dropdown.empty();
                     $.each(response, function(index, varian) {
+                        let text = varian.nama + '  [' + (varian.jenis == 'ukuran' ?
+                            varian.ukuran : varian.nomor) + ']';
                         dropdown.append($('<option></option>').attr('value', varian
-                            .id).text(varian.nama + '  [' + varian.ukuran +
-                            '] | Stok : ' + varian.stok));
-
+                                .id)
+                            .text(text));
                     });
                 },
                 error: function(xhr, status, error) {

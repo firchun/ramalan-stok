@@ -63,7 +63,7 @@ class StokMitraController extends Controller
             ->addColumn('action', function ($stok) {
                 return '<img style="width:100px; height:100px; object-fit:cover;" src="' . ($stok->produk->foto_produk == null || $stok->produk->foto_produk == '' ? asset('/img/logo.png') : Storage::url($stok->produk->foto_produk)) . '"/>';
             })
-            ->rawColumns(['foto', 'nama', 'varian'])
+            ->rawColumns(['foto', 'nama', 'varian', 'action'])
             ->make(true);
     }
     public function getRiwayatStokMitraDataTable(Request $request, $id_user)
