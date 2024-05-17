@@ -46,6 +46,7 @@ class PenjualanController extends Controller
                 $stok->jumlah = $request->jumlah;
                 $stok->id_varian = $request->id_varian ?? null;
                 $stok->id_produk = $request->id_produk;
+                $stok->created_at = $request->created_at;
                 $stok->save();
                 return response()->json(['message' => 'Berhasil melakukan penjualan']);
             } else {
@@ -78,6 +79,7 @@ class PenjualanController extends Controller
                 $stok->jumlah = $request->jumlah;
                 $stok->id_varian = $request->id_varian ?? null;
                 $stok->id_produk = $request->id_produk;
+                $stok->created_at = $request->created_at;
                 $stok->save();
                 return response()->json(['message' => 'Berhasil melakukan penjualan']);
             } else {

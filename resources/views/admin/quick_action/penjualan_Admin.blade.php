@@ -25,6 +25,11 @@
                         <label for="formPenjualanJumlah" class="form-label">Jumlah</label>
                         <input type="number" class="form-control" id="formPenjualanJumlah" name="jumlah" required>
                     </div>
+                    <div class="mb-3">
+                        <label for="formPenjualanTanggal" class="form-label">Tanggal Penjualan</label>
+                        <input type="datetime-local" class="form-control" id="formPenjualanTanggal" name="created_at"
+                            required>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -68,6 +73,7 @@
             var jumlah = $('#formPenjualanJumlah').val();
             var id_produk = $('#formPenjualanIdProduk').val();
             var id_varian = $('#formPenjualanVarian').val();
+            var created_at = $('#formPenjualanTanggal').val();
 
 
             $.ajax({
@@ -77,6 +83,7 @@
                     jumlah: jumlah,
                     id_produk: id_produk,
                     id_varian: id_varian,
+                    created_at: created_at,
                     _token: $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
