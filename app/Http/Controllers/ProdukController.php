@@ -102,10 +102,13 @@ class ProdukController extends Controller
 
         return response()->json($customer);
     }
-    public function getProdukDataTable()
+    public function getProdukDataTable(Request $request)
     {
+        $search = $request->input('search.value');
         $produk = Produk::with('jenis')->orderByDesc('id');
-
+        if (!empty($search)) {
+            $produk->where('nama_produk', 'like', '%' . $search . '%');
+        }
         return Datatables::of($produk)
             ->addColumn('foto', function ($produk) {
                 return '<img style="width:100px;height:100px; object-fit:cover;" src="' . ($produk->foto_produk == null || $produk->foto_produk == '' ? asset('/img/logo.png') : Storage::url($produk->foto_produk)) . '"/>';

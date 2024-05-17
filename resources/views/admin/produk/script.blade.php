@@ -1,14 +1,15 @@
 @push('js')
     <script>
         $(function() {
-            $('#datatable-produk').DataTable({
+            var tableProduk = $('#datatable-produk').DataTable({
                 processing: true,
                 serverSide: true,
                 responsive: true,
                 ajax: '{{ url('produk-datatable') }}',
                 columns: [{
                         data: 'id',
-                        name: 'id'
+                        name: 'id',
+                        searchable: false,
                     },
 
                     {
@@ -36,7 +37,11 @@
                         data: 'action',
                         name: 'action'
                     }
-                ]
+                ],
+                dom: 'lrtip',
+            });
+            $('#custom-search').on('keyup', function() {
+                tableProduk.search($(this).val()).draw();
             });
             $('.create-new').click(function() {
                 $('#create').modal('show');

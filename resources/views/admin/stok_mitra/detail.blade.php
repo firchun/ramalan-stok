@@ -249,7 +249,6 @@
                     {
                         data: 'nama',
                         name: 'nama',
-                        searchable: true,
                     },
                     {
                         data: 'varian',
@@ -259,10 +258,11 @@
                     {
                         data: 'total_jumlah',
                         name: 'total_jumlah',
-                        searchable: false,
                     },
-                ]
+                ],
+                dom: 'lrtip',
             });
+
             $('#datatable-riwayat-stok').DataTable({
                 processing: true,
                 serverSide: true,

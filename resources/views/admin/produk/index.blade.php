@@ -33,6 +33,10 @@
                             </button>
                         </div>
                     </div>
+                    <div class="mt-5">
+                        Cari nama produk : <input type="text" class="form-control" id="custom-search"
+                            placeholder="Cari Nama produk">
+                    </div>
                 </div>
                 <div class="card-datatable table-responsive">
                     <table id="datatable-produk" class="table table-sm table-hover table-bordered display">
