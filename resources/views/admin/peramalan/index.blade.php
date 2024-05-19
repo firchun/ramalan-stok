@@ -136,7 +136,9 @@
                     },
                     success: function(response) {
                         // console.log(response);
-                        // alert(response.message);
+                        if (response.success == false) {
+                            alert(response.message);
+                        }
                         $('#datatable-produk').DataTable().ajax.reload();
 
                         // Clear existing content
@@ -147,7 +149,7 @@
                         htmlContent +=
                             '<div class="card-header"><strong>Hasil Ramalan Produk ' + data
                             .produk + ' Bulan : ' + data
-                            .bulan_1 +
+                            .bulan_n +
                             '</strong></div>';
                         htmlContent +=
                             '<div class="card-body"><table class="table table-hover table-bordered">';
@@ -158,25 +160,25 @@
                         htmlContent += '<td> ' + data.produk + '</td>';
                         htmlContent += '<tr>';
                         htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_4 + '</td>';
-                        htmlContent += '<td> ' + data.nilai_aktual_4 + '</td>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_3 + '</td>';
-                        htmlContent += '<td> ' + data.nilai_aktual_3 + '</td>';
-                        htmlContent += '</tr>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_1 + '</td>';
+                        htmlContent += '<td> ' + data.periode_1 + '</td>';
                         htmlContent += '<tr>';
                         htmlContent += '<td>Data Aktual Bulan ' + data.bulan_2 + '</td>';
-                        htmlContent += '<td> ' + data.nilai_aktual_2 + '</td>';
+                        htmlContent += '<td> ' + data.periode_2 + '</td>';
                         htmlContent += '</tr>';
                         htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_1 + '</td>';
-                        htmlContent += '<td> ' + data.nilai_aktual_1 + '</td>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_3 + '</td>';
+                        htmlContent += '<td> ' + data.periode_3 + '</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<tr>';
+                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_n + '</td>';
+                        htmlContent += '<td> ' + data.periode_n + '</td>';
                         htmlContent += '</tr>';
                         htmlContent += '<tr>';
                         htmlContent += '<td>Moving Average (MA) </td>';
-                        htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.nilai_aktual_4 +
+                        htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.periode_1 +
                             ' + ' + data
-                            .nilai_aktual_3 + ' + ' + data.nilai_aktual_2 + ')/3 <br>= ' + data
+                            .periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data
                             .total_ma + '</td>';
                         htmlContent += '</tr>';
                         htmlContent += '<td>Error </td>';
@@ -187,7 +189,7 @@
                         htmlContent += '</tbody></table>';
                         htmlContent +=
                             '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
-                            data.bulan_1 + ', adalah sebanyak : ' + data.total_ma +
+                            data.bulan_n + ', adalah sebanyak : ' + data.total_ma +
                             ' </h4>';
                         htmlContent += '</div>';
                         htmlContent += '</div>';

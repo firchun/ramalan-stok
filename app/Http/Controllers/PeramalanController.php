@@ -7,6 +7,7 @@ use App\Models\Produk;
 use App\Models\Stok;
 use App\Models\StokMitra;
 use Carbon\Carbon;
+use Illuminate\Database\DBAL\TimestampType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -49,11 +50,31 @@ class PeramalanController extends Controller
         ];
         return view('admin.peramalan.hasil', $data);
     }
-    public function getPeramalanDataTable($id_produk)
+    public function getPeramalanDataTable($id_produk, Request $request)
     {
         $Peramalan = Peramalan::with('produk')->where('id_produk', $id_produk)->orderByDesc('id');
         return Datatables::of($Peramalan)
-            ->rawColumns()
+            ->addColumn('action', function ($Peramalan) {
+                $deleteButton = '<button onclick="deleteRamalan(' . $Peramalan->id . ')" class="btn btn-sm text-danger"><i class="bx bx-trash"></i></button>';
+                $showButton = '<button onclick="show(' . $Peramalan->id . ')" class="btn btn-sm text-primary"><i class="bx bx-show"></i></button>';
+                return $showButton . $deleteButton;
+            })
+            ->addColumn('tanggal', function ($Peramalan) {
+                return $Peramalan->created_at->format('d F Y') . '<br><small class="text-muted">Jam ' . $Peramalan->created_at->format('H:i A') . '</small>';
+            })
+            ->addColumn('bulan_pertama', function ($Peramalan) {
+                return '<strong>' . $Peramalan->periode_1 . '</strong><br><small class="text-muted">' . $Peramalan->bulan_1 . '</small>';
+            })
+            ->addColumn('bulan_kedua', function ($Peramalan) {
+                return '<strong>' . $Peramalan->periode_2 . '</strong><br><small class="text-muted">' . $Peramalan->bulan_2 . '</small>';
+            })
+            ->addColumn('bulan_ketiga', function ($Peramalan) {
+                return '<strong>' . $Peramalan->periode_3 . '</strong><br><small class="text-muted">' . $Peramalan->bulan_3 . '</small>';
+            })
+            ->addColumn('bulan_diramal', function ($Peramalan) {
+                return '<strong>' . $Peramalan->periode_n . '</strong><br><small class="text-muted">' . $Peramalan->bulan_n . '</small>';
+            })
+            ->rawColumns(['action', 'bulan_pertama', 'bulan_kedua', 'bulan_ketiga', 'bulan_diramal', 'tanggal'])
             ->make(true);
     }
     public function store(Request $request)
@@ -63,6 +84,9 @@ class PeramalanController extends Controller
         $bulan = $request->bulan;
         $tahun = $request->tahun;
 
+        if ($id_produk == null || $id_produk == '') {
+            return response()->json(['message' => 'Harap pilih produk terlebih dahulu', 'success' => false]);
+        }
         //ambil data produk
         $produk = Produk::find($id_produk);
         //variabel untuk menampung semua data perbulan
@@ -116,45 +140,54 @@ class PeramalanController extends Controller
         //nilai error = aktual bulan ini - average
         $error = $aktual_bulan_ini - $total_average;
         //error kuadrat = nilai (error )^
-        $error_kuadrat = pow($error, 2);
-        //nilai SSE = total error kuadrat
-        $sse = $error_kuadrat;
-        //nilai MSE = total sse di kuadratkan
-        $mse = pow($sse, 2);
-        //menampilkan data berbentuk json
-        $data = [
+
+        $peramalanData = [
             'id_produk' => $produk->id,
-            'produk' => $produk->nama_produk,
-            'total_penjualan' => $total_penjualan,
-            'aktual_bulan_ini' => $aktual_bulan_ini,
+            'periode_1' => $total_bulanan[3]['stok'] + $total_bulanan[3]['stok_mitra'],
+            'periode_2' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
+            'periode_3' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
+            'periode_n' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
+            'bulan_1' => $total_bulanan[3]['bulan'],
+            'bulan_2' => $total_bulanan[2]['bulan'],
+            'bulan_3' => $total_bulanan[1]['bulan'],
+            'bulan_n' => $total_bulanan[0]['bulan'],
+            'total_penjualan' => $aktual_bulan_ini,
             'total_ma' => $total_average,
             'total_error' => $error,
-            'total_error_kuadrat' => $error_kuadrat,
-            'total_sse' => $sse,
-            'total_mse' => $mse,
-            // 'ramalan' => $forcast,
-            'nilai_aktual_1' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
-            'nilai_aktual_2' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
-            'nilai_aktual_3' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
-            'nilai_aktual_4' => $total_bulanan[3]['stok'] + $total_bulanan[3]['stok_mitra'],
-            'bulan_1' =>  $total_bulanan[0]['bulan'],
-            'bulan_2' =>  $total_bulanan[1]['bulan'],
-            'bulan_3' =>  $total_bulanan[2]['bulan'],
-            'bulan_4' =>  $total_bulanan[3]['bulan'],
             'tahun' => $tahun,
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
 
-        //cek data json pada console
-        return response()->json([$data, 'message' => 'Berhasil']);
+        //pengujian tanpa menyimpan dengan tampilkan data json
+        // return response()->json([$peramalanData, 'message' => 'Berhasil', 'success' => true]);
 
         //menyimpan dalam database
-        // $simpan = DB::insert($data);
-        // if ($simpan) {
-        //     // berpindah halaman untuk menampilkan hasil
-        //     session()->flash('success', 'Berhasil membuat ramalan');
-        //     return redirect()->to('/peramalan/hasil', $produk->id);
-        // } else {
-        //     return response()->json(['message' => 'Gagal menyimpan ramalan']);
-        // }
+        $simpan = DB::table('peramalan')->insert($peramalanData);
+        $peramalanData['produk'] = $produk->nama_produk;
+        if ($simpan) {
+            session()->flash('success', 'Berhasil membuat ramalan');
+            // return redirect()->to('/peramalan/hasil', $produk->id);
+            return response()->json([$peramalanData, 'message' => 'Berhasil membuat ramalan', 'success' => true]);
+        } else {
+            return response()->json(['message' => 'Gagal menyimpan ramalan', 'success' => false]);
+        }
+    }
+    public function show($id)
+    {
+        $Peramalan = Peramalan::find($id);
+        return response()->json([$Peramalan]);
+    }
+    public function destroy($id)
+    {
+        $peramalan = Peramalan::find($id);
+
+        if (!$peramalan) {
+            return response()->json(['message' => 'ramalan not found'], 404);
+        }
+
+        $peramalan->delete();
+
+        return response()->json(['message' => 'ramalan deleted successfully']);
     }
 }

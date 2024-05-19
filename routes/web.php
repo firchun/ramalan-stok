@@ -119,6 +119,8 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/report/printUtama', [LaporanController::class, 'printUtama'])->name('report.printUtama');
     //peramalan
     Route::get('/peramalan', [PeramalanController::class, 'index'])->name('peramalan');
+    Route::get('/peramalan/show/{id}', [PeramalanController::class, 'show'])->name('peramalan.show');
+    Route::delete('/peramalan/delete/{id}', [PeramalanController::class, 'destroy'])->name('peramalan.delete');
     Route::get('/peramalan/hasil/{id_produk}', [PeramalanController::class, 'hasilProduk'])->name('peramalan.hasil');
     Route::post('/peramalan/store', [PeramalanController::class, 'store'])->name('peramalan.store');
     Route::get('/hasil-ramalan-datatable/{id_produk}', [PeramalanController::class, 'getPeramalanDataTable']);
