@@ -30,6 +30,7 @@ class HomeController extends Controller
             'title' => 'Dashboard',
             'mitra' => User::where('role', 'Mitra')->count(),
             'produk' => Produk::count(),
+            'produk_list' => Produk::paginate(12),
         ];
         return view('admin.dashboard', $data);
     }

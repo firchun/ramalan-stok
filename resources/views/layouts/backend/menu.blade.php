@@ -32,6 +32,12 @@
                     <div data-i18n="Analytics">Peramalan</div>
                 </a>
             </li>
+            <li class="menu-item {{ request()->is('pesanan*') ? 'active' : '' }}">
+                <a href="{{ url('/pesanan') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-cart"></i>
+                    <div data-i18n="Analytics">Pesanan</div>
+                </a>
+            </li>
         @endif
         {{-- <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Transaksi</span>

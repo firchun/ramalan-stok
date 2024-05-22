@@ -1,9 +1,24 @@
 @extends('layouts.frontend.app')
 
 @section('content')
+    <section class="page-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="content">
+                        <h1 class="page-name">{{ $title }}</h1>
+                        <ol class="breadcrumb">
+                            <li><a href="{{ url('/') }}">Home</a></li>
+                            <li class="active">{{ $title }}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="products section bg-gray">
         <div class="container">
-            <form action="{{ url('/search-produk') }}" method="GET">
+            <form action="{{ url('/search-discount') }}" method="GET">
                 <div class="my-2 row justify-content-center">
                     <div class="col-lg-10 col-md-8 col-6">
                         <input type="text" name="search" class="form-control" placeholder="Cari Produk disini..."
@@ -15,7 +30,7 @@
                 </div>
             </form>
             <div class="title text-center">
-                <h2>Daftar Produk</h2>
+                <h2>Daftar Discount Produk</h2>
             </div>
             <div class="row d-flex justify-items-center">
                 @forelse ($produk as $item)
@@ -37,6 +52,9 @@
                                             <span data-toggle="modal" data-target="#product-modal{{ $item->id }}">
                                                 <i class="tf-ion-ios-search-strong"></i>
                                             </span>
+                                            <span data-toggle="modal" data-target="#product-pesan{{ $item->id }}">
+                                                <i class="tf-ion-android-cart"></i>
+                                            </span>
                                         </li>
 
                                     </ul>
@@ -48,8 +66,8 @@
                                 <p class="price">
                                     @if ($item->is_discount == 1)
                                         <del>{{ 'Rp ' . number_format($item->harga_jual) }}</del>
-                                        <b style="color:red !important;">
-                                            {{ 'Rp ' . number_format($item->harga_discount) }}</b>
+                                        <b
+                                            style="color:red !important;">{{ 'Rp ' . number_format($item->harga_discount) }}</b>
                                     @else
                                         {{ 'Rp ' . number_format($item->harga_jual) }}
                                     @endif
@@ -127,6 +145,49 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal product-modal fade" id="product-pesan{{ $item->id }}">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="tf-ion-close"></i>
+                    </button>
+                    <div class="modal-dialog " role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <h4 class="widget-title">Form Pemesanan : {{ $item->nama_produk }}</h4>
+                                <form class="checkout-form">
+                                    <div class="form-group">
+                                        <label for="full_name">Nama Lengkap</label>
+                                        <input type="text" class="form-control" id="full_name" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_address">Alamat</label>
+                                        <input type="text" class="form-control" id="user_address" placeholder="">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_country">Nomor HP/WA (aktif)</label>
+                                        <input type="text" class="form-control" id="user_country" placeholder="">
+                                    </div>
+                                    @php
+                                        $varian = App\Models\Varian::where('id_produk', $item->id);
+                                    @endphp
+                                    @if ($varian->count() > 0)
+                                        <span>Pilih Varian :</span>
+                                        <div class="form-group mb-4">
+                                            <select class="form-control" name="id_varian">
+                                                @foreach (App\Models\Varian::where('id_produk', $item->id)->get() as $varian)
+                                                    <option value="{{ $varian->id }}">
+                                                        {{ $varian->nama }} -
+                                                        {{ $varian->jenis == 'ukuran' ? $varian->ukuran : $varian->nomor }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                                    <button type="submit" class="btn btn-main mt-20">Pesan Sekarang</button>
+                                </form>
                             </div>
                         </div>
                     </div>

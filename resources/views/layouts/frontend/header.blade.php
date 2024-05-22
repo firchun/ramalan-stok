@@ -41,6 +41,12 @@
                         <a href="{{ url('/') }}">Home</a>
                     </li><!-- / Home -->
                     <li class="dropdown ">
+                        <a href="{{ url('/about') }}">About</a>
+                    </li><!-- / Home -->
+                    <li class="dropdown ">
+                        <a href="{{ url('/discount') }}">Discount</a>
+                    </li><!-- / Home -->
+                    <li class="dropdown ">
                         @guest
                             <a href="{{ route('login') }}">Login</a>
                         @else

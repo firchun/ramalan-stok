@@ -4,6 +4,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PeramalanController;
+use App\Http\Controllers\PesananController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StokController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\StokMitraController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VarianController;
 use App\Models\Produk;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -30,10 +32,23 @@ Route::get('/', function () {
     $produk = Produk::with(['jenis'])->latest()->paginate(12);
     return view('pages.index', ['produk' => $produk, 'title' => 'Beranda']);
 });
+Route::get('/about', function () {
+    $mitra = User::where('role', 'Mitra')->get();
+    return view('pages.about', ['mitra' => $mitra, 'title' => 'About']);
+});
+Route::get('/discount', function () {
+    $produk = Produk::with(['jenis'])->where('is_discount', 1)->latest()->paginate(12);
+    return view('pages.discount', ['produk' => $produk, 'title' => 'Discount Produk']);
+});
 Route::get('/search-produk', function (Request $request) {
     $search = $request->input('search');
     $produk = Produk::with(['jenis'])->where('nama_produk', 'like', '%' . $search . '%')->latest()->paginate(12);
     return view('pages.index', ['produk' => $produk, 'title' => 'Search : ' . $search, 'searchInput' => $search]);
+});
+Route::get('/search-discount', function (Request $request) {
+    $search = $request->input('search');
+    $produk = Produk::with(['jenis'])->where('nama_produk', 'like', '%' . $search . '%')->where('is_discount', 1)->latest()->paginate(12);
+    return view('pages.discount', ['produk' => $produk, 'title' => 'Search Discount : ' . $search, 'searchInput' => $search]);
 });
 
 Auth::routes();
@@ -65,6 +80,8 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/varian-datatable/{id}', [VarianController::class, 'getVarianDataTable'])->name('varian-datatable');
 });
 Route::middleware(['auth:web', 'role:Admin'])->group(function () {
+    //pesanan managemen
+    Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
     //user managemen
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/mitra', [UserController::class, 'mitra'])->name('mitra');

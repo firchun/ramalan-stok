@@ -26,7 +26,19 @@
                         <label for="formEditKeteranganProduk" class="form-label">Keterangan Produk</label>
                         <textarea class="form-control" id="formEditKeteranganProduk" name="keterangan_produk"></textarea>
                     </div>
-
+                    <hr>
+                    <strong>Discount :</strong>
+                    <div class="form-check form-switch mb-2">
+                        <label class="form-check-label" for="formEditIsDiscount">Discount </label>
+                        <input class="form-check-input" type="checkbox" id="formEditIsDiscount" checked="">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formEditDiscount" class="form-label">Persentase</label>
+                        <div class="input-group input-group-merge">
+                            <input type="number" class="form-control" id="formEditDiscount">
+                            <span class="input-group-text" id="basic-addon33">%</span>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
