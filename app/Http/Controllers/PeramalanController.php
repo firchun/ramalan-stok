@@ -134,11 +134,11 @@ class PeramalanController extends Controller
         //hitung total penjualan
         $total_penjualan = ($total_stok + $total_stok_mitra) - ($total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra']);
         //hitung rata-rata
-        $total_average = $total_penjualan / 3;
+        $total_average = round($total_penjualan / 3);
         //aktual bulan ini
         $aktual_bulan_ini = $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'];
         //nilai error = aktual bulan ini - average
-        $error = $aktual_bulan_ini - $total_average;
+        $error = round(abs($aktual_bulan_ini - $total_average));
         //error kuadrat = nilai (error )^
 
         $peramalanData = [

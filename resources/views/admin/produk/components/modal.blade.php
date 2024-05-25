@@ -90,7 +90,7 @@
     </div>
 </div>
 <div class="modal fade" id="varianProduk" tabindex="-1" aria-labelledby="customersModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-body">
                 <!-- Form for Create and Edit -->
@@ -101,6 +101,10 @@
                         <div class="mb-3">
                             <label for="formNamaVarian" class="form-label">Nama Varian</label>
                             <input type="text" class="form-control" id="FormNamaVarian" name="nama" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFotoVarian" class="form-label">Foto Varian</label>
+                            <input type="file" class="form-control" id="FormFotoVarian" name="foto">
                         </div>
                         <div class="mb-3">
                             <label for="formKodeWarna" class="form-label">Warna</label>
@@ -140,6 +144,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Foto</th>
                             <th>Nama Varian</th>
                             <th>Ukuran</th>
                             <th>Hapus</th>
@@ -278,6 +283,10 @@
                         <label for="formUpdateNamaVarian" class="form-label">Nama Varian</label>
                         <input type="text" class="form-control" id="formUpdateNamaVarian" name="nama"
                             required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFotoVarian" class="form-label">Foto Varian</label>
+                        <input type="file" class="form-control" id="formFotoVarian" name="foto">
                     </div>
                     <div class="mb-3">
                         <label for="formUpdateKodeWarna" class="form-label">Warna</label>

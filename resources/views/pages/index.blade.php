@@ -80,10 +80,34 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-6 col-xs-12">
-                                        <div class="modal-image">
-                                            <img class="img-responsive"
-                                                src="{{ $item->foto_produk == null || $item->foto_produk == '' ? asset('/img/logo.png') : Storage::url($item->foto_produk) }}"
-                                                alt="product-img" />
+                                        <div class="single-product-slider">
+                                            <div class='carousel-outer'>
+                                                <!-- Carousel Bootstrap (Carousel Induk) -->
+                                                <div id="carousel-custom-induk" class="carousel slide" data-ride="carousel">
+                                                    <!-- Wrapper for slides -->
+                                                    <div class='carousel-inner'>
+                                                        <div class='item active'>
+                                                            <img src='{{ $item->foto_produk == null || $item->foto_produk == '' ? asset('/img/logo.png') : Storage::url($item->foto_produk) }}'
+                                                                alt='' data-zoom-image="{{ $item->foto_produk == null || $item->foto_produk == '' ? asset('/img/logo.png') : Storage::url($item->foto_produk) }}" style="height:400px; object-fit:cover;">
+                                                        </div>
+                                                        <!-- Variasi Foto -->
+                                                        @foreach(App\Models\Varian::where('id_produk',$item->id)->where('foto','!=',null)->get() as $foto)
+                                                        <div class='item'>
+                                                            <img src='{{ Storage::url($foto->foto) }}'
+                                                                alt=''  data-zoom-image="{{ Storage::url($foto->foto) }}" style="height:400px; object-fit:cover;">
+                                                        </div>
+                                                        @endforeach
+                                                    </div>
+                                                    <!-- Navigation -->
+                                                    <a class='left carousel-control' href='#carousel-custom-induk' role='button' data-slide='prev'>
+                                                        <i class="tf-ion-ios-arrow-left"></i>
+                                                    </a>
+                                                    <a class='right carousel-control' href='#carousel-custom-induk' role='button' data-slide='next'>
+                                                        <i class="tf-ion-ios-arrow-right"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-6 col-xs-12">

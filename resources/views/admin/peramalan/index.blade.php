@@ -95,7 +95,7 @@
         $(function() {
             $('#datatable-produk').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('produk-datatable') }}',
                 columns: [{
@@ -114,7 +114,28 @@
                         data: 'action_ramalan',
                         name: 'action_ramalan'
                     }
-                ]
+                ],
+                initComplete: function() {
+                    var table = this;
+                    table.api().columns().every(function(index) {
+                        if (index === 1 || index === 2) {
+                            var column = this;
+                            var title = column.header().textContent.trim();
+
+                            var input = document.createElement('input');
+                            input.placeholder = 'Search ' + title;
+                            input.classList.add('form-control-sm');
+                            // Menambahkan input ke dalam header
+                            $(table.api().column(index).header()).empty().append(input);
+
+                            $(input).on('keyup change clear', function() {
+                                if (column.search() !== this.value) {
+                                    column.search(this.value).draw();
+                                }
+                            });
+                        }
+                    });
+                },
             });
 
             $('.refresh').click(function() {
@@ -184,7 +205,7 @@
                         htmlContent += '<td>Error </td>';
                         htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
                             .total_ma + '<sup>2</sup> <br> = ' + data
-                            .total_error + '</td>';
+                            .total_error + ' %</td>';
                         htmlContent += '</tr>';
                         htmlContent += '</tbody></table>';
                         htmlContent +=

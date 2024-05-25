@@ -22,9 +22,9 @@
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('/img/') }}/logo.png" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.0.1/css/ionicons.min.css"
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/5.0.1/css/ionicons.min.css"
         integrity="sha512-pEEXf+G92p3tgg8PmdvczNEIbChpgL4CZulz1P2f8VnNf1iU+mr0qW1UYD0d+GnN0Ck+AXRJYO9mcQG2E7YfDQ=="
-        crossorigin="anonymous" />
+        crossorigin="anonymous" /> --}}
 
     <!-- Themefisher Icon font -->
     <link rel="stylesheet" href="{{ asset('/frontend_theme/') }}/plugins/themefisher-font/style.css">

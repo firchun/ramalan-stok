@@ -69,9 +69,8 @@ class UserController extends Controller
 
             ->addColumn('produk', function ($user) {
                 $produkCount = StokMitra::where('id_user', $user->id)
-                    ->groupBy('id_produk')
                     ->distinct('id_produk')
-                    ->count();
+                    ->count('id_produk');
 
                 return $produkCount . ' Produk';
             })

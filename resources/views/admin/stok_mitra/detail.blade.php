@@ -233,8 +233,8 @@
     <script>
         $(function() {
             $('#datatable-stok').DataTable({
-                processing: true,
-                serverSide: true,
+                processing: false,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('stok-mitra-datatable', $user->id) }}',
                 columns: [{
@@ -249,23 +249,53 @@
                     {
                         data: 'nama',
                         name: 'nama',
+                        searchable: true
                     },
                     {
                         data: 'varian',
-                        name: 'varian'
+                        name: 'varian',
+                        searchable: true
                     },
 
                     {
                         data: 'total_jumlah',
                         name: 'total_jumlah',
+                        searchable: true
                     },
                 ],
-                dom: 'lrtip',
+                search: {
+                    smart: true,
+                    regex: true
+                },
+                initComplete: function() {
+                    var table = this;
+                    table.api().columns().every(function(index) {
+                        if (index === 2 || index === 3 || index === 4) {
+                            var column = this;
+                            var title = column.header().textContent.trim();
+
+                            var input = document.createElement('input');
+                            input.placeholder = 'Search ' + title;
+                            input.classList.add('form-control-sm');
+                            // Menambahkan input ke dalam header
+                            $(table.api().column(index).header()).empty().append(input);
+
+                            $(input).on('keyup change clear', function() {
+                                if (column.search() !== this.value) {
+                                    column.search(this.value).draw();
+                                }
+                            });
+                        }
+                    });
+                }
+
+
+                // dom: 'lrtip',
             });
 
             $('#datatable-riwayat-stok').DataTable({
-                processing: true,
-                serverSide: true,
+                processing: false,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('riwayat-stok-mitra-datatable', $user->id) }}',
                 columns: [{
@@ -287,7 +317,11 @@
                         name: 'jumlah'
                     },
                 ],
-                dom: '<"top"l>rt<"bottom"p>'
+
+                dom: '<"top"f>rt<"bottom"p>',
+                search: {
+                    smart: true
+                }
             });
             $('.refresh').click(function() {
                 $('#datatable-stok').DataTable().ajax.reload();

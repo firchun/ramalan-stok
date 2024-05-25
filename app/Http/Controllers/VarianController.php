@@ -7,8 +7,10 @@ use App\Models\StokMitra;
 use App\Models\Varian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Svg\Tag\Rect;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
 
 class VarianController extends Controller
 {
@@ -50,9 +52,6 @@ class VarianController extends Controller
         return response()->json($data);
     }
 
-
-
-
     public function getVarianDataTable($id_produk)
     {
         $Varian = Varian::with('produk')->where('id_produk', $id_produk)->orderByDesc('id');
@@ -62,6 +61,9 @@ class VarianController extends Controller
             })
             ->addColumn('ukuran_text', function ($Varian) {
                 return $Varian->jenis == 'nomor' ? $Varian->nomor : $Varian->ukuran;
+            })
+            ->addColumn('foto_view', function ($Varian) {
+                return '<img src="' . Storage::url($Varian->foto) . '" style="width:50px;height"50px;object-fit:cover;">';
             })
             ->addColumn('delete', function ($Varian) {
                 $edit_button = '<button type="button" onclick="updateVarian(' . $Varian->id . ')" class="btn btn-warning btn-sm mx-2"><i class="bx bx-edit"></i></button>';
@@ -82,7 +84,7 @@ class VarianController extends Controller
                 $color = $jumlah == 0 ? 'danger' : 'primary';
                 return '<span class="badge bg-' . $color . '">' . $jumlah . '</span>';
             })
-            ->rawColumns(['delete', 'warna', 'ukuran_text', 'jumlah'])
+            ->rawColumns(['delete', 'warna', 'ukuran_text', 'jumlah', 'foto_view'])
             ->make(true);
     }
     public function store(Request $request)
@@ -94,6 +96,7 @@ class VarianController extends Controller
             // 'nomor' => 'string|max:255',
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
+            'foto' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
         ]);
 
         $varianData = [
@@ -104,6 +107,16 @@ class VarianController extends Controller
             'nomor' => $request->input('nomor'),
             'ukuran' => $request->input('ukuran'),
         ];
+        if ($request->hasFile('foto')) {
+            $filename = Str::random(32) . '.' . $request->file('foto')->getClientOriginalExtension();
+
+            $image = $request->file('foto');
+            $image->storeAs('public/produk', $filename);
+
+
+            $file_path = 'public/produk/' . $filename;
+            $varianData['foto'] = isset($file_path) ? $file_path : '';
+        }
 
         // Jika jenis adalah 'ukuran', atur 'nomor' menjadi null
         if ($request->input('jenis') == 'ukuran') {

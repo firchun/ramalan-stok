@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="card-datatable table-responsive">
-                    <table id="datatable-stok" class="table table-hover table-bordered display">
+                    <table id="datatable-stok" class="table table-hover table-bordered display table-sm">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -56,7 +56,7 @@
         $(function() {
             $('#datatable-stok').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('stok-datatable') }}',
                 columns: [{
@@ -89,7 +89,29 @@
                         data: 'user.name',
                         name: 'user.name'
                     },
-                ]
+                ],
+                initComplete: function() {
+                    var table = this;
+                    table.api().columns().every(function(index) {
+                        if (index === 1 || index === 2 || index === 3 || index === 4 ||
+                            index === 5 || index === 6) {
+                            var column = this;
+                            var title = column.header().textContent.trim();
+
+                            var input = document.createElement('input');
+                            input.placeholder = 'Search ' + title;
+                            input.classList.add('form-control-sm');
+                            // Menambahkan input ke dalam header
+                            $(table.api().column(index).header()).empty().append(input);
+
+                            $(input).on('keyup change clear', function() {
+                                if (column.search() !== this.value) {
+                                    column.search(this.value).draw();
+                                }
+                            });
+                        }
+                    });
+                },
             });
             $('.refresh').click(function() {
                 $('#datatable-stok').DataTable().ajax.reload();

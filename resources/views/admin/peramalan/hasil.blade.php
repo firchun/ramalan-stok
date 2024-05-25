@@ -78,7 +78,7 @@
         $(function() {
             $('#datatable-hasil').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('hasil-ramalan-datatable', $produk->id) }}',
                 columns: [{
@@ -116,8 +116,17 @@
                     },
                     {
                         data: 'total_error',
-                        name: 'total_error'
+                        name: 'total_error',
+                        render: function(data, type, row) {
+                            if (type === 'display' && data !== null) {
+                                var roundedData = Math.round(parseFloat(data));
+                                return roundedData.toString() + ' %';
+                            } else {
+                                return data;
+                            }
+                        }
                     },
+
                     {
                         data: 'action',
                         name: 'action'
@@ -202,8 +211,8 @@
                         htmlContent += '</tr>';
                         htmlContent += '<td>Error </td>';
                         htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
-                            .total_ma + '<sup>2</sup> <br> = ' + data
-                            .total_error + '</td>';
+                            .total_ma + '<sup>2</sup> <br> = ' + Math.round(parseFloat(data
+                                .total_error)) + ' %</td>';
                         htmlContent += '</tr>';
                         htmlContent += '</tbody></table>';
                         htmlContent +=

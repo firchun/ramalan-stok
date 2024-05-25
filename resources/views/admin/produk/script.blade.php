@@ -3,7 +3,7 @@
         $(function() {
             var tableProduk = $('#datatable-produk').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false,
                 responsive: true,
                 ajax: '{{ url('produk-datatable') }}',
                 columns: [{
@@ -38,6 +38,27 @@
                         name: 'action'
                     }
                 ],
+                initComplete: function() {
+                    var table = this;
+                    table.api().columns().every(function(index) {
+                        if (index === 2 || index === 4 || index === 5) {
+                            var column = this;
+                            var title = column.header().textContent.trim();
+
+                            var input = document.createElement('input');
+                            input.placeholder = 'Search ' + title;
+                            input.classList.add('form-control-sm');
+                            // Menambahkan input ke dalam header
+                            $(table.api().column(index).header()).empty().append(input);
+
+                            $(input).on('keyup change clear', function() {
+                                if (column.search() !== this.value) {
+                                    column.search(this.value).draw();
+                                }
+                            });
+                        }
+                    });
+                },
                 dom: 'lrtip',
             });
             $('#custom-search').on('keyup', function() {
@@ -140,6 +161,10 @@
                             name: 'id'
                         },
                         {
+                            data: 'foto_view',
+                            name: 'foto_view'
+                        },
+                        {
                             data: 'warna',
                             name: 'warna'
                         },
@@ -204,6 +229,41 @@
                     ]
                 });
             };
+            // $('#btnUpdateVarian').click(function() {
+            //     var id = $('#formUpdateVarianId').val();
+            //     var id_produk = $('#formUpdateVarianIdProduk').val();
+            //     var kode_warna = $('#formUpdateKodeWarna').val();
+            //     var nama = $('#formUpdateNamaVarian').val();
+            //     var ukuran = $('#formUpdateUkuranVarian').val();
+            //     var jenis = $('#formUpdateJenisVarian').val();
+            //     var nomor = $('#FormUpdateNomorVarian').val();
+            //     var file = $('#formFotoVarian')[0].files[0];
+
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: '/varian/store',
+            //         data: {
+            //             kode_warna: kode_warna,
+            //             nama: nama,
+            //             ukuran: ukuran,
+            //             id: id,
+            //             id_produk: id_produk,
+            //             jenis: jenis,
+            //             nomor: nomor,
+            //             foto: file,
+            //             _token: $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         success: function(response) {
+            //             alert(response.message);
+            //             $('#updateVarian').modal('hide');
+            //             $('#datatable-varian').DataTable().ajax.reload();
+            //             $('#datatable-produk').DataTable().ajax.reload();
+            //         },
+            //         error: function(xhr) {
+            //             alert('Terjadi kesalahan: ' + xhr.responseText);
+            //         }
+            //     });
+            // });
             $('#btnUpdateVarian').click(function() {
                 var id = $('#formUpdateVarianId').val();
                 var id_produk = $('#formUpdateVarianIdProduk').val();
@@ -212,20 +272,26 @@
                 var ukuran = $('#formUpdateUkuranVarian').val();
                 var jenis = $('#formUpdateJenisVarian').val();
                 var nomor = $('#FormUpdateNomorVarian').val();
+                var file = $('#formFotoVarian')[0].files[0];
+
+                // Membuat objek FormData
+                var formData = new FormData();
+                formData.append('kode_warna', kode_warna);
+                formData.append('nama', nama);
+                formData.append('ukuran', ukuran);
+                formData.append('id', id);
+                formData.append('id_produk', id_produk);
+                formData.append('jenis', jenis);
+                formData.append('nomor', nomor);
+                formData.append('foto', file); // Menambahkan file ke formData
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
                 $.ajax({
                     type: 'POST',
                     url: '/varian/store',
-                    data: {
-                        kode_warna: kode_warna,
-                        nama: nama,
-                        ukuran: ukuran,
-                        id: id,
-                        id_produk: id_produk,
-                        jenis: jenis,
-                        nomor: nomor,
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
+                    data: formData, // Mengirim formData
+                    processData: false, // Memproses data secara manual
+                    contentType: false, // Tidak mengatur tipe konten secara otomatis
                     success: function(response) {
                         alert(response.message);
                         $('#updateVarian').modal('hide');
@@ -237,6 +303,44 @@
                     }
                 });
             });
+
+            // $('#btnSimpanVarian').click(function() {
+            //     var id_produk = $('#formVarianIdProduk').val();
+            //     var kode_warna = $('#formKodeWarna').val();
+            //     var nama = $('#FormNamaVarian').val();
+            //     var ukuran = $('#formUkuranVarian').val();
+            //     var jenis = $('#formJenisVarian').val();
+            //     var nomor = $('#FormNomorVarian').val();
+            //     var file = $('#formFotoVarian')[0].files[0];
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: '/varian/store',
+            //         data: {
+            //             kode_warna: kode_warna,
+            //             nama: nama,
+            //             ukuran: ukuran,
+            //             id_produk: id_produk,
+            //             jenis: jenis,
+            //             nomor: nomor,
+            //             foto: file,
+            //             _token: $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //         success: function(response) {
+            //             alert(response.message);
+            //             // console.log(response);
+            //             // $('#formVarianIdProduk').val('');
+            //             // $('#formKodeWarna').val('');
+            //             $('#formNamaVarian').val('');
+            //             // $('#formUkuranVarian').val('');
+            //             $('#FormNomorVarian').val('');
+            //             $('#datatable-varian').DataTable().ajax.reload();
+            //             $('#datatable-produk').DataTable().ajax.reload();
+            //         },
+            //         error: function(xhr) {
+            //             alert('Terjadi kesalahan: ' + xhr.responseText);
+            //         }
+            //     });
+            // });
             $('#btnSimpanVarian').click(function() {
                 var id_produk = $('#formVarianIdProduk').val();
                 var kode_warna = $('#formKodeWarna').val();
@@ -244,26 +348,29 @@
                 var ukuran = $('#formUkuranVarian').val();
                 var jenis = $('#formJenisVarian').val();
                 var nomor = $('#FormNomorVarian').val();
+                var file = $('#formFotoVarian')[0].files[0];
+
+                // Membuat objek FormData
+                var formData = new FormData();
+                formData.append('kode_warna', kode_warna);
+                formData.append('nama', nama);
+                formData.append('ukuran', ukuran);
+                formData.append('id_produk', id_produk);
+                formData.append('jenis', jenis);
+                formData.append('nomor', nomor);
+                formData.append('foto', file);
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
                 $.ajax({
                     type: 'POST',
                     url: '/varian/store',
-                    data: {
-                        kode_warna: kode_warna,
-                        nama: nama,
-                        ukuran: ukuran,
-                        id_produk: id_produk,
-                        jenis: jenis,
-                        nomor: nomor,
-                        _token: $('meta[name="csrf-token"]').attr('content')
-                    },
+                    data: formData,
+                    processData: false, // Biarkan jQuery mengolah data secara otomatis
+                    contentType: false, // Biarkan jQuery menentukan jenis konten secara otomatis
                     success: function(response) {
                         alert(response.message);
-                        // console.log(response);
-                        // $('#formVarianIdProduk').val('');
-                        // $('#formKodeWarna').val('');
+                        // Reset nilai form setelah berhasil disimpan
                         $('#formNamaVarian').val('');
-                        // $('#formUkuranVarian').val('');
                         $('#FormNomorVarian').val('');
                         $('#datatable-varian').DataTable().ajax.reload();
                         $('#datatable-produk').DataTable().ajax.reload();
@@ -273,6 +380,7 @@
                     }
                 });
             });
+
             window.kurangStok = function(id) {
                 $('#kurangStok').modal('show');
                 $('#btnKurangStok').data('id', id);

@@ -55,7 +55,8 @@ class StokMitraController extends Controller
                 $varian = Varian::where('id_produk', $stok->id_produk)
                     ->where('id', $stok->id_varian)
                     ->first();
-                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+                $ukuran = $varian->jenis == 'ukuran' ? $varian->ukuran : $varian->nomor;
+                return $varian ? $varian->nama . ' [' . $ukuran . ']' : '';
             })
             ->addColumn('foto', function ($stok) {
                 return '<img style="width:100px; height:100px; object-fit:cover;" src="' . ($stok->produk->foto_produk == null || $stok->produk->foto_produk == '' ? asset('/img/logo.png') : Storage::url($stok->produk->foto_produk)) . '"/>';
@@ -92,7 +93,8 @@ class StokMitraController extends Controller
                 $varian = Varian::where('id_produk', $stok->id_produk)
                     ->where('id', $stok->id_varian)
                     ->first();
-                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+                $ukuran = $varian->jenis == 'ukuran' ? $varian->ukuran : $varian->nomor;
+                return $varian ? $varian->nama . ' [' . $ukuran . ']' : '';
             })
             ->rawColumns(['nama', 'tanggal', 'varian'])
             ->make(true);
@@ -133,7 +135,8 @@ class StokMitraController extends Controller
                 $varian = Varian::where('id_produk', $stok->id_produk)
                     ->where('id', $stok->id_varian)
                     ->first();
-                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+                $ukuran = $varian->jenis == 'ukuran' ? $varian->ukuran : $varian->nomor;
+                return $varian ? $varian->nama . ' [' . $ukuran . ']' : '';
             })
             ->rawColumns(['nama', 'tanggal', 'varian'])
             ->make(true);
@@ -153,7 +156,8 @@ class StokMitraController extends Controller
                 $varian = Varian::where('id_produk', $stok->id_produk)
                     ->where('id', $stok->id_varian)
                     ->first();
-                return $varian ? $varian->nama . ' [' . $varian->ukuran . ']' : '';
+                $ukuran = $varian->jenis == 'ukuran' ? $varian->ukuran : $varian->nomor;
+                return $varian ? $varian->nama . ' [' . $ukuran . ']' : '';
             })
             ->addColumn('nama', function ($stok) {
                 $span = '<br><span class="badge bg-primary">' . $stok->jenis . '</span>';
