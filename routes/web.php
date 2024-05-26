@@ -51,6 +51,8 @@ Route::get('/search-discount', function (Request $request) {
     return view('pages.discount', ['produk' => $produk, 'title' => 'Search Discount : ' . $search, 'searchInput' => $search]);
 });
 
+Route::post('/kirim-pesanan',[PesananController::class,'store'])->name('kirim-pesanan');
+
 Auth::routes();
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -82,6 +84,9 @@ Route::middleware(['auth:web'])->group(function () {
 Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //pesanan managemen
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
+    Route::get('/pesanan/konfirmasi/{id}', [PesananController::class, 'konfirmasi'])->name('pesanan.konfirmasi');
+    Route::post('/pesanan/bayar/{id}', [PesananController::class, 'bukti_bayar'])->name('pesanan.bayar');
+    Route::get('/pesanan-datatable', [PesananController::class, 'getPesananDataTable']);
     //user managemen
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::get('/mitra', [UserController::class, 'mitra'])->name('mitra');

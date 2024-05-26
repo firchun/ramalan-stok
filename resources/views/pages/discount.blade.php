@@ -157,18 +157,28 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <h4 class="widget-title">Form Pemesanan : {{ $item->nama_produk }}</h4>
-                                <form class="checkout-form">
+                                <form class="checkout-form" action="{{route('kirim-pesanan')}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id_produk" value="{{$item->id}}">
                                     <div class="form-group">
                                         <label for="full_name">Nama Lengkap</label>
-                                        <input type="text" class="form-control" id="full_name" placeholder="">
+                                        <input type="text" class="form-control" id="full_name" placeholder="" name="nama">
                                     </div>
                                     <div class="form-group">
                                         <label for="user_address">Alamat</label>
-                                        <input type="text" class="form-control" id="user_address" placeholder="">
+                                        <input type="text" class="form-control" id="user_address" placeholder="" name="alamat">
                                     </div>
                                     <div class="form-group">
                                         <label for="user_country">Nomor HP/WA (aktif)</label>
-                                        <input type="text" class="form-control" id="user_country" placeholder="">
+                                        <input type="text" class="form-control" id="user_country" placeholder="" name="no_hp">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_country">Jumlah </label>
+                                        <input type="number" class="form-control" placeholder="" name="jumlah" min="1">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label >Catatan</label>
+                                        <textarea class="form-control"  name="catatan">-</textarea>
                                     </div>
                                     @php
                                         $varian = App\Models\Varian::where('id_produk', $item->id);
@@ -186,6 +196,7 @@
                                             </select>
                                         </div>
                                     @endif
+
                                     <button type="submit" class="btn btn-main mt-20">Pesan Sekarang</button>
                                 </form>
                             </div>
@@ -196,4 +207,15 @@
             <!-- /.modal -->
         </div>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    @if(Session::has('success'))
+        Swal.fire({
+            icon: 'success',
+            title: '{{ Session::get('success') }}',
+            showConfirmButton: true,
+        });
+    @endif
+</script>
 @endsection
+
