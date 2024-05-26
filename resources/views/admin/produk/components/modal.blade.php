@@ -27,16 +27,39 @@
                         <textarea class="form-control" id="formEditKeteranganProduk" name="keterangan_produk"></textarea>
                     </div>
                     <hr>
+                    <strong>harga :</strong>
+                    <div class="mb-3">
+                        <label for="formEditHargaModal" class="form-label">Harga Modal</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text" id="basic-addon33">Rp</span>
+                            <input type="number" class="form-control" id="formEditHargaModal" name="harga_modal">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formEditHargaJual" class="form-label">Harga Jual</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text" id="basic-addon33">Rp</span>
+                            <input type="number" class="form-control" id="formEditHargaJual" name="harga_jual">
+                        </div>
+                    </div>
+                    <hr>
                     <strong>Discount :</strong>
                     <div class="form-check form-switch mb-2">
                         <label class="form-check-label" for="formEditIsDiscount">Discount </label>
-                        <input class="form-check-input" type="checkbox" id="formEditIsDiscount" checked="">
+                        <input class="form-check-input" type="checkbox" id="formEditIsDiscount"  name="is_discount">
                     </div>
                     <div class="mb-3">
                         <label for="formEditDiscount" class="form-label">Persentase</label>
                         <div class="input-group input-group-merge">
-                            <input type="number" class="form-control" id="formEditDiscount">
+                            <input type="number" class="form-control" id="formEditDiscount" name="discount">
                             <span class="input-group-text" id="basic-addon33">%</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formEditHargaDsicount" class="form-label">Harga Discount</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text" id="basic-addon33">Rp</span>
+                            <input type="number" class="form-control" id="formEditHargaDsicount" name="harga_discount">
                         </div>
                     </div>
                 </form>
@@ -79,6 +102,42 @@
                     <div class="mb-3">
                         <label for="formCreateKeteranganProduk" class="form-label">Keterangan Produk</label>
                         <textarea class="form-control" id="formCreateKeteranganProduk" name="keterangan_produk" required>-</textarea>
+                    </div>
+                    <hr>
+                    <strong>harga :</strong>
+                    <div class="mb-3">
+                        <label for="formCreateHargaModal" class="form-label">Harga Modal</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text" id="basic-addon33">Rp</span>
+                            <input type="number" class="form-control" id="formCreateHargaModal" value="0" name="harga_modal">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCreateHargaJual" class="form-label">Harga Jual</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text" id="basic-addon33">Rp</span>
+                            <input type="number" class="form-control" id="formCreateHargaJual" value="0" name="harga_jual">
+                        </div>
+                    </div>
+                    <hr>
+                    <strong>Discount :</strong>
+                    <div class="form-check form-switch mb-2">
+                        <label class="form-check-label" for="formCreateIsDiscount">Discount </label>
+                        <input class="form-check-input" type="checkbox" id="formCreateIsDiscount"  name="is_discount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCreateDiscount" class="form-label">Persentase</label>
+                        <div class="input-group input-group-merge">
+                            <input type="number" class="form-control" id="formCreateDiscount" value="0" name="discount">
+                            <span class="input-group-text" id="basic-addon33">%</span>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formCreateHargaDsicount" class="form-label">Harga Discount</label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text" id="basic-addon33">Rp</span>
+                            <input type="number" class="form-control" id="formCreateHargaDsicount" value="0" name="harga_discount">
+                        </div>
                     </div>
                 </form>
             </div>

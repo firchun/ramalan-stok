@@ -111,8 +111,17 @@
 
                         }
                         $('#formProdukId').val(response.id);
+                        $('#formEditHargaModal').val(response.harga_modal);
+                        $('#formEditHargaJual').val(response.harga_jual);
+                        $('#formEditHargaDsicount').val(response.harga_discount);
+                        $('#formEditDiscount').val(response.discount);
                         $('#formNamaEditProduk').val(response.nama_produk);
                         $('#formEditKeteranganProduk').val(response.keterangan_produk);
+                        if (response.is_discount == 1) {
+                                $('#formEditIsDiscount').prop('checked', true); 
+                            } else {
+                                $('#formEditIsDiscount').prop('checked', false); 
+                            }
                         $('#customersModal').modal('show');
                     },
                     error: function(xhr) {

@@ -154,12 +154,20 @@ class ProdukController extends Controller
             $request->validate([
                 'nama_produk' => 'string|max:255',
                 'id_jenis_produk' => 'string',
-                'keterangan_produk' => 'string',
                 'foto_produk' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
+                'keterangan_produk' => 'string',
+                'harga_modal' => 'numeric',
+                'harga_jual' => 'numeric',
+                'harga_discount' => 'numeric',
+                'discount' => 'numeric',
             ]);
             $produkData = [
                 'nama_produk' => $request->input('nama_produk'),
                 'keterangan_produk' => $request->input('keterangan_produk'),
+                'harga_modal' => $request->input('harga_modal'),
+                'harga_jual' => $request->input('harga_jual'),
+                'harga_discount' => $request->input('harga_discount'),
+                'discount' => $request->input('discount'),
             ];
         } else {
 
@@ -168,14 +176,27 @@ class ProdukController extends Controller
                 'id_jenis_produk' => 'required|string',
                 'keterangan_produk' => 'required|string',
                 'foto_produk' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
+                'harga_modal' => 'string',
+                'harga_jual' => 'string',
+                'harga_discount' => 'string',
+                'discount' => 'string',
             ]);
             $produkData = [
                 'nama_produk' => $request->input('nama_produk'),
                 'id_jenis_produk' =>  $request->input('id_jenis_produk'),
                 'keterangan_produk' => $request->input('keterangan_produk'),
+                'harga_modal' => $request->input('harga_modal'),
+                'harga_jual' => $request->input('harga_jual'),
+                'harga_discount' => $request->input('harga_discount'),
+                'discount' => $request->input('discount'),
             ];
         }
+        if($request->input('is_discount') == 'on'){
+            $produkData['is_discount'] = 1;
+        }else{
+            $produkData['is_discount'] = 0;
 
+        }
         if ($request->hasFile('foto_produk')) {
             $filename = Str::random(32) . '.' . $request->file('foto_produk')->getClientOriginalExtension();
 
