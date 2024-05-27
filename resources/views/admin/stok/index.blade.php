@@ -90,28 +90,28 @@
                         name: 'user.name'
                     },
                 ],
-                initComplete: function() {
-                    var table = this;
-                    table.api().columns().every(function(index) {
-                        if (index === 1 || index === 2 || index === 3 || index === 4 ||
-                            index === 5 || index === 6) {
-                            var column = this;
-                            var title = column.header().textContent.trim();
+                // initComplete: function() {
+                //     var table = this;
+                //     table.api().columns().every(function(index) {
+                //         if (index === 1 || index === 2 || index === 3 || index === 4 ||
+                //             index === 5 || index === 6) {
+                //             var column = this;
+                //             var title = column.header().textContent.trim();
 
-                            var input = document.createElement('input');
-                            input.placeholder = 'Search ' + title;
-                            input.classList.add('form-control-sm');
-                            // Menambahkan input ke dalam header
-                            $(table.api().column(index).header()).empty().append(input);
+                //             var input = document.createElement('input');
+                //             input.placeholder = 'Search ' + title;
+                //             input.classList.add('form-control-sm');
+                //             // Menambahkan input ke dalam header
+                //             $(table.api().column(index).header()).empty().append(input);
 
-                            $(input).on('keyup change clear', function() {
-                                if (column.search() !== this.value) {
-                                    column.search(this.value).draw();
-                                }
-                            });
-                        }
-                    });
-                },
+                //             $(input).on('keyup change clear', function() {
+                //                 if (column.search() !== this.value) {
+                //                     column.search(this.value).draw();
+                //                 }
+                //             });
+                //         }
+                //     });
+                // },
             });
             $('.refresh').click(function() {
                 $('#datatable-stok').DataTable().ajax.reload();

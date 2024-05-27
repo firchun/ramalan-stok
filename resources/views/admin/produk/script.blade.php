@@ -38,27 +38,27 @@
                         name: 'action'
                     }
                 ],
-                initComplete: function() {
-                    var table = this;
-                    table.api().columns().every(function(index) {
-                        if (index === 2 || index === 4 || index === 5) {
-                            var column = this;
-                            var title = column.header().textContent.trim();
+                // initComplete: function() {
+                //     var table = this;
+                //     table.api().columns().every(function(index) {
+                //         if (index === 2 || index === 4 || index === 5) {
+                //             var column = this;
+                //             var title = column.header().textContent.trim();
 
-                            var input = document.createElement('input');
-                            input.placeholder = 'Search ' + title;
-                            input.classList.add('form-control-sm');
-                            // Menambahkan input ke dalam header
-                            $(table.api().column(index).header()).empty().append(input);
+                //             var input = document.createElement('input');
+                //             input.placeholder = 'Search ' + title;
+                //             input.classList.add('form-control-sm');
+                //             // Menambahkan input ke dalam header
+                //             $(table.api().column(index).header()).empty().append(input);
 
-                            $(input).on('keyup change clear', function() {
-                                if (column.search() !== this.value) {
-                                    column.search(this.value).draw();
-                                }
-                            });
-                        }
-                    });
-                },
+                //             $(input).on('keyup change clear', function() {
+                //                 if (column.search() !== this.value) {
+                //                     column.search(this.value).draw();
+                //                 }
+                //             });
+                //         }
+                //     });
+                // },
                 dom: 'lrtip',
             });
             $('#custom-search').on('keyup', function() {
@@ -418,6 +418,7 @@
                 var jumlah = $('#formPenjualanJumlah').val();
                 var id_produk = $('#formPenjualanIdProduk').val();
                 var id_varian = $('#formPenjualanVarian').val();
+                var created_at = $('#formPenjualanTanggal').val();
 
                 $.ajax({
                     type: 'POST',
@@ -426,6 +427,7 @@
                         jumlah: jumlah,
                         id_produk: id_produk,
                         id_varian: id_varian,
+                        created_at: created_at,
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
