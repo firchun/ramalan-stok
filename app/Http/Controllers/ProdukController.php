@@ -10,6 +10,7 @@ use App\Models\StokMitra;
 use App\Models\Varian;
 use Faker\Core\Number;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
@@ -150,7 +151,7 @@ class ProdukController extends Controller
                 $harga_modal = '<strong>Harga Modal </strong>: '.number_format($produk->harga_modal);
                 $harga_jual = '<br><strong>Harga Jual </strong>: '.number_format($produk->harga_jual);
                 $harga_diskon = $produk->is_discount == 1 ? '<br><strong>Harga Diskon </strong>: '.number_format($produk->harga_discount).' <sup class="text-danger">'.$produk->discount.'%</sup>' : '';
-                return $harga_modal.$harga_jual.$harga_diskon;
+                return Auth::user()->role == 'Admin' ? $harga_modal.$harga_jual.$harga_diskon : $harga_jual;
             })
             ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan', 'varian','harga'])
             ->make(true);
