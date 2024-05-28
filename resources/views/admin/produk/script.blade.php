@@ -22,8 +22,8 @@
                     },
 
                     {
-                        data: 'keterangan',
-                        name: 'keterangan'
+                        data: 'harga',
+                        name: 'harga'
                     },
                     {
                         data: 'varian',

@@ -8,6 +8,7 @@ use App\Models\Produk;
 use App\Models\Stok;
 use App\Models\StokMitra;
 use App\Models\Varian;
+use Faker\Core\Number;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -145,7 +146,13 @@ class ProdukController extends Controller
                 $total = Peramalan::where('id_produk', $produk->id)->count();
                 return $total ?? 0;
             })
-            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan', 'varian'])
+            ->addColumn('harga', function ($produk) {
+                $harga_modal = '<strong>Harga Modal </strong>: '.number_format($produk->harga_modal);
+                $harga_jual = '<br><strong>Harga Jual </strong>: '.number_format($produk->harga_jual);
+                $harga_diskon = $produk->is_discount == 1 ? '<br><strong>Harga Diskon </strong>: '.number_format($produk->harga_discount).' <sup class="text-danger">'.$produk->discount.'%</sup>' : '';
+                return $harga_modal.$harga_jual.$harga_diskon;
+            })
+            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan', 'varian','harga'])
             ->make(true);
     }
     public function store(Request $request)
