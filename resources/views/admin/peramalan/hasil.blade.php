@@ -33,7 +33,7 @@
                                 <th>Bulan Diramal</th>
                                 <th>Tahun</th>
                                 <th>Moving Average</th>
-                                <th>Error</th>
+                                {{-- <th>Error</th> --}}
                                 <th style="width:150px;">Action</th>
                             </tr>
                         </thead>
@@ -48,7 +48,7 @@
                                 <th>Bulan Diramal</th>
                                 <th>Tahun</th>
                                 <th>Moving Average</th>
-                                <th>Error</th>
+                                {{-- <th>Error</th> --}}
                                 <th style="width:150px;">Action</th>
                             </tr>
                         </tfoot>
@@ -114,18 +114,18 @@
                         data: 'total_ma',
                         name: 'total_ma'
                     },
-                    {
-                        data: 'total_error',
-                        name: 'total_error',
-                        render: function(data, type, row) {
-                            if (type === 'display' && data !== null) {
-                                var roundedData = Math.round(parseFloat(data));
-                                return roundedData.toString() + ' %';
-                            } else {
-                                return data;
-                            }
-                        }
-                    },
+                    // {
+                    //     data: 'total_error',
+                    //     name: 'total_error',
+                    //     render: function(data, type, row) {
+                    //         if (type === 'display' && data !== null) {
+                    //             var roundedData = Math.round(parseFloat(data));
+                    //             return roundedData.toString() + ' %';
+                    //         } else {
+                    //             return data;
+                    //         }
+                    //     }
+                    // },
 
                     {
                         data: 'action',
@@ -209,11 +209,11 @@
                             .periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data
                             .total_ma + '</td>';
                         htmlContent += '</tr>';
-                        htmlContent += '<td>Error </td>';
-                        htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
-                            .total_ma + '<sup>2</sup> <br> = ' + Math.round(parseFloat(data
-                                .total_error)) + ' %</td>';
-                        htmlContent += '</tr>';
+                        // htmlContent += '<td>Error </td>';
+                        // htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
+                        //     .total_ma + '<sup>2</sup> <br> = ' + Math.round(parseFloat(data
+                        //         .total_error)) + ' %</td>';
+                        // htmlContent += '</tr>';
                         htmlContent += '</tbody></table>';
                         htmlContent +=
                             '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +

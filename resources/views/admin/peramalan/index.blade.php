@@ -115,27 +115,27 @@
                         name: 'action_ramalan'
                     }
                 ],
-                initComplete: function() {
-                    var table = this;
-                    table.api().columns().every(function(index) {
-                        if (index === 1 || index === 2) {
-                            var column = this;
-                            var title = column.header().textContent.trim();
+                // initComplete: function() {
+                //     var table = this;
+                //     table.api().columns().every(function(index) {
+                //         if (index === 1 || index === 2) {
+                //             var column = this;
+                //             var title = column.header().textContent.trim();
 
-                            var input = document.createElement('input');
-                            input.placeholder = 'Search ' + title;
-                            input.classList.add('form-control-sm');
-                            // Menambahkan input ke dalam header
-                            $(table.api().column(index).header()).empty().append(input);
+                //             var input = document.createElement('input');
+                //             input.placeholder = 'Search ' + title;
+                //             input.classList.add('form-control-sm');
+                //             // Menambahkan input ke dalam header
+                //             $(table.api().column(index).header()).empty().append(input);
 
-                            $(input).on('keyup change clear', function() {
-                                if (column.search() !== this.value) {
-                                    column.search(this.value).draw();
-                                }
-                            });
-                        }
-                    });
-                },
+                //             $(input).on('keyup change clear', function() {
+                //                 if (column.search() !== this.value) {
+                //                     column.search(this.value).draw();
+                //                 }
+                //             });
+                //         }
+                //     });
+                // },
             });
 
             $('.refresh').click(function() {
@@ -202,11 +202,11 @@
                             .periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data
                             .total_ma + '</td>';
                         htmlContent += '</tr>';
-                        htmlContent += '<td>Error </td>';
-                        htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
-                            .total_ma + '<sup>2</sup> <br> = ' + data
-                            .total_error + ' %</td>';
-                        htmlContent += '</tr>';
+                        // htmlContent += '<td>Error </td>';
+                        // htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
+                        //     .total_ma + '<sup>2</sup> <br> = ' + data
+                        //     .total_error + ' %</td>';
+                        // htmlContent += '</tr>';
                         htmlContent += '</tbody></table>';
                         htmlContent +=
                             '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
