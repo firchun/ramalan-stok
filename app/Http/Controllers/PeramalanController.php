@@ -138,10 +138,13 @@ class PeramalanController extends Controller
         $total_average = round($total_penjualan / 3);
         //aktual bulan ini
         $aktual_bulan_ini = $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'];
+        if ($aktual_bulan_ini <= 0) {
+            return response()->json(['message' => 'Data aktual bulan ini 0 sehingga tidak bisa menghitung MAPE', 'success' => false]);
+        }
         //nilai error = aktual bulan ini - average
         $error = round(abs($aktual_bulan_ini - $total_average));
         //error kuadrat = nilai (error )^
-        $error_2 = round(($error / $aktual_bulan_ini) * 100,2);
+        $error_2 = round(($error / $aktual_bulan_ini) * 100, 2);
 
         $peramalanData = [
             'id_produk' => $produk->id,
