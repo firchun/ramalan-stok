@@ -36,6 +36,10 @@ Route::get('/about', function () {
     $mitra = User::where('role', 'Mitra')->get();
     return view('pages.about', ['mitra' => $mitra, 'title' => 'About']);
 });
+Route::get('/kontak', function () {
+    $mitra = User::where('role', 'Mitra')->get();
+    return view('pages.kontak', ['mitra' => $mitra, 'title' => 'Kontak Mitra']);
+});
 Route::get('/discount', function () {
     $produk = Produk::with(['jenis'])->where('is_discount', 1)->latest()->paginate(12);
     return view('pages.discount', ['produk' => $produk, 'title' => 'Discount Produk']);
@@ -51,7 +55,7 @@ Route::get('/search-discount', function (Request $request) {
     return view('pages.discount', ['produk' => $produk, 'title' => 'Search Discount : ' . $search, 'searchInput' => $search]);
 });
 
-Route::post('/kirim-pesanan',[PesananController::class,'store'])->name('kirim-pesanan');
+Route::post('/kirim-pesanan', [PesananController::class, 'store'])->name('kirim-pesanan');
 
 Auth::routes();
 Route::middleware(['auth:web'])->group(function () {
@@ -85,6 +89,7 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     //pesanan managemen
     Route::get('/pesanan', [PesananController::class, 'index'])->name('pesanan');
     Route::get('/pesanan/konfirmasi/{id}', [PesananController::class, 'konfirmasi'])->name('pesanan.konfirmasi');
+    Route::delete('/pesanan/batal/{id}', [PesananController::class, 'destroy'])->name('pesanan.batal');
     Route::post('/pesanan/bayar/{id}', [PesananController::class, 'bukti_bayar'])->name('pesanan.bayar');
     Route::get('/pesanan-datatable', [PesananController::class, 'getPesananDataTable']);
     //user managemen

@@ -19,7 +19,7 @@
                             </button>
                         </div>
                     </div>
-                   
+
                 </div>
                 <div class="card-datatable ">
                     <table id="datatable-pesanan" class="table table-sm table-hover table-bordered display">
@@ -76,7 +76,7 @@
 @push('js')
     <script>
         $(function() {
-             $('#datatable-pesanan').DataTable({
+            $('#datatable-pesanan').DataTable({
                 processing: true,
                 serverSide: false,
                 responsive: true,
@@ -113,16 +113,13 @@
                         data: 'konfirmasi',
                         name: 'konfirmasi'
                     },
-                
-                ],
-                
 
-                
+                ],
             });
             $('.refresh').click(function() {
                 $('#datatable-pesanan').DataTable().ajax.reload();
             });
-            window.confirm = function(id) {
+            window.konfirmasi = function(id) {
                 $.ajax({
                     type: 'GET',
                     url: '/pesanan/konfirmasi/' + id,
@@ -136,6 +133,27 @@
                     }
                 });
             };
+            window.batal = function(id) {
+                if (confirm(
+                        'Apakah Anda yakin ingin membatalkan pesanana ini?, jika dibatalkan maka data pesanan akan dihapus'
+                    )) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/pesanan/batal/' + id,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            alert(response.message);
+                            $('#datatable-pesanan').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            $('#datatable-pesanan').DataTable().ajax.reload();
+                            alert('Terjadi kesalahan: ' + xhr.responseText);
+                        }
+                    });
+                }
+            };
             window.payment = function(id) {
                 $('#id_pesanan').val(id);
                 $('#bukti').modal('show');
@@ -146,14 +164,14 @@
 
                 // Membuat objek FormData
                 var formData = new FormData();
-                
+
                 formData.append('id', id);
                 formData.append('bukti_bayar', file);
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
 
                 $.ajax({
                     type: 'POST',
-                    url: '/pesanan/bayar/'+id,
+                    url: '/pesanan/bayar/' + id,
                     data: formData,
                     processData: false, // Biarkan jQuery mengolah data secara otomatis
                     contentType: false, // Biarkan jQuery menentukan jenis konten secara otomatis

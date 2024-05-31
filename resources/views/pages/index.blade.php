@@ -148,6 +148,7 @@
                                                     </select>
                                                 </div>
                                             @endif
+                                            <a href="{{url('/kontak')}}" class="btn btn-main">Kontak Mitra</a>
                                         </div>
                                     </div>
                                 </div>

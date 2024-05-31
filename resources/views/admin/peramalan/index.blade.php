@@ -89,6 +89,7 @@
             </div>
         </div>
     </div>
+    
 @endsection
 @push('js')
     <script>
@@ -156,7 +157,7 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        // console.log(response);
+                        console.log(response);
                         if (response.success == false) {
                             alert(response.message);
                         }
@@ -197,21 +198,20 @@
                         htmlContent += '</tr>';
                         htmlContent += '<tr>';
                         htmlContent += '<td>Moving Average (MA) </td>';
-                        htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.periode_1 +
-                            ' + ' + data
-                            .periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data
-                            .total_ma + '</td>';
+                        htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.periode_1 +' + ' + data.periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data.total_ma + '</td>';
                         htmlContent += '</tr>';
-                        // htmlContent += '<td>Error </td>';
-                        // htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
-                        //     .total_ma + '<sup>2</sup> <br> = ' + data
-                        //     .total_error + ' %</td>';
-                        // htmlContent += '</tr>';
+                        
+                        htmlContent += '<td>MAD </td>';
+                        htmlContent += '<td> | Data Aktual Bulan '+data.bulan_n+' - MA | <br> = ' + data.periode_n + ' - '+data.total_ma+' <br>= '+data.mad+'</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<td>MAPE </td>';
+                        htmlContent += '<td> (MAD / Data Aktual Bulan  '+data.bulan_n+') X 100 <br> = (' + data.mad + ' / '+data.periode_n+') x 100 <br> = ' + data.mape + ' %</td>';
+                        htmlContent += '</tr>';
                         htmlContent += '</tbody></table>';
                         htmlContent +=
                             '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
                             data.bulan_n + ', adalah sebanyak : ' + data.total_ma +
-                            ' </h4>';
+                            ' dengan error sebesar '+data.mape+' %</h4>';
                         htmlContent += '</div>';
                         htmlContent += '</div>';
 

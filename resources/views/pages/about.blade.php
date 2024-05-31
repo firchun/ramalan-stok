@@ -41,7 +41,7 @@
 
                 </div>
             </div>
-            <hr>
+            {{-- <hr>
             <h3 class="text-center mt-4">Mitra Kami </h3>
             <table class="table table-hover ">
                 @foreach ($mitra as $item)
@@ -51,7 +51,7 @@
                         <td>{{ $item->no_hp }}</td>
                     </tr>
                 @endforeach
-            </table>
+            </table> --}}
         </div>
     </section>
 @endsection

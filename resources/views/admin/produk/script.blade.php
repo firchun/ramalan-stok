@@ -22,8 +22,12 @@
                     },
 
                     {
-                        data: 'harga',
-                        name: 'harga'
+                        data: 'harga_modal',
+                        name: 'harga_modal'
+                    },
+                    {
+                        data: 'harga_jual',
+                        name: 'harga_jual'
                     },
                     {
                         data: 'varian',
@@ -118,10 +122,10 @@
                         $('#formNamaEditProduk').val(response.nama_produk);
                         $('#formEditKeteranganProduk').val(response.keterangan_produk);
                         if (response.is_discount == 1) {
-                                $('#formEditIsDiscount').prop('checked', true); 
-                            } else {
-                                $('#formEditIsDiscount').prop('checked', false); 
-                            }
+                            $('#formEditIsDiscount').prop('checked', true);
+                        } else {
+                            $('#formEditIsDiscount').prop('checked', false);
+                        }
                         $('#customersModal').modal('show');
                     },
                     error: function(xhr) {

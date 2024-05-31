@@ -153,7 +153,16 @@ class ProdukController extends Controller
                 $harga_diskon = $produk->is_discount == 1 ? '<br><strong>Harga Diskon </strong>: '.number_format($produk->harga_discount).' <sup class="text-danger">'.$produk->discount.'%</sup>' : '';
                 return Auth::user()->role == 'Admin' ? $harga_modal.$harga_jual.$harga_diskon : $harga_jual;
             })
-            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan', 'varian','harga'])
+            ->addColumn('harga_modal', function ($produk) {
+                return  'Rp '.number_format($produk->harga_modal);
+            })
+            ->addColumn('harga_jual', function ($produk) {
+                $harga_jual = number_format($produk->harga_jual);
+                $harga_diskon = '<del> Rp'.number_format($produk->harga_jual).'</del><br><strong class="text-danger"> Rp'.number_format($produk->harga_discount).'</strong>';
+                return $produk->is_discount == 1 ? $harga_diskon : $harga_jual;
+            })
+        
+            ->rawColumns(['action', 'keterangan', 'foto', 'nama', 'stok', 'action_ramalan', 'hasil_ramalan', 'varian','harga_modal','harga_jual'])
             ->make(true);
     }
     public function store(Request $request)

@@ -80,6 +80,30 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group  mb-3">
+                                        <label class="form-control-label" for="email">Phone Number<span
+                                                class="small text-danger">*</span></label>
+                                        <input type="text" id="no_hp"
+                                            class="form-control  @error('no_hp') is-invalid @enderror" name="no_hp"
+                                            placeholder="example@example.com"
+                                            value="{{ old('no_hp', Auth::user()->no_hp) }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group  mb-3">
+                                        <label class="form-control-label" for="email">Address<span
+                                                class="small text-danger">*</span></label>
+                                        <textarea type="text" id="alamat"
+                                            class="form-control  @error('alamat') is-invalid @enderror" name="alamat"
+                                            >{{ old('alamat', Auth::user()->alamat) }}</textarea>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div class="form-group focused  mb-3">

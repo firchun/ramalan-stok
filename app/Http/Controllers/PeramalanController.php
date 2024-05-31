@@ -87,6 +87,7 @@ class PeramalanController extends Controller
         if ($id_produk == null || $id_produk == '') {
             return response()->json(['message' => 'Harap pilih produk terlebih dahulu', 'success' => false]);
         }
+
         //ambil data produk
         $produk = Produk::find($id_produk);
         //variabel untuk menampung semua data perbulan
@@ -140,6 +141,7 @@ class PeramalanController extends Controller
         //nilai error = aktual bulan ini - average
         $error = round(abs($aktual_bulan_ini - $total_average));
         //error kuadrat = nilai (error )^
+        $error_2 = round(($error / $aktual_bulan_ini) * 100,2);
 
         $peramalanData = [
             'id_produk' => $produk->id,
@@ -153,7 +155,8 @@ class PeramalanController extends Controller
             'bulan_n' => $total_bulanan[0]['bulan'],
             'total_penjualan' => $aktual_bulan_ini,
             'total_ma' => $total_average,
-            'total_error' => $error,
+            'mad' => $error,
+            'mape' => $error_2 ?? 0,
             'tahun' => $tahun,
             'created_at' => now(),
             'updated_at' => now(),

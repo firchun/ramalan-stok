@@ -33,7 +33,8 @@
                                 <th>Bulan Diramal</th>
                                 <th>Tahun</th>
                                 <th>Moving Average</th>
-                                {{-- <th>Error</th> --}}
+                                <th>MAD</th>
+                                <th>MAPE</th>
                                 <th style="width:150px;">Action</th>
                             </tr>
                         </thead>
@@ -48,7 +49,8 @@
                                 <th>Bulan Diramal</th>
                                 <th>Tahun</th>
                                 <th>Moving Average</th>
-                                {{-- <th>Error</th> --}}
+                                <th>MAD</th>
+                                <th>MAPE</th>
                                 <th style="width:150px;">Action</th>
                             </tr>
                         </tfoot>
@@ -113,6 +115,22 @@
                     {
                         data: 'total_ma',
                         name: 'total_ma'
+                    },
+                    {
+                        data: 'mad',
+                        name: 'mad'
+                    },
+                    {
+                        data: 'mape',
+                        name: 'mape',
+                        render: function(data, type, row) {
+                        if (type === 'display' && data !== null) {
+                               
+                                return data + ' %';
+                            } else {
+                                return data;
+                            }
+                        }
                     },
                     // {
                     //     data: 'total_error',
@@ -209,18 +227,21 @@
                             .periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data
                             .total_ma + '</td>';
                         htmlContent += '</tr>';
-                        // htmlContent += '<td>Error </td>';
-                        // htmlContent += '<td> MA<sup>2</sup> <br> = ' + data
-                        //     .total_ma + '<sup>2</sup> <br> = ' + Math.round(parseFloat(data
-                        //         .total_error)) + ' %</td>';
-                        // htmlContent += '</tr>';
+                        
+                        htmlContent += '<td>MAD </td>';
+                        htmlContent += '<td> | Data Aktual Bulan '+data.bulan_n+' - MA | <br> = ' + data.periode_n + ' - '+data.total_ma+' <br>= '+data.mad+'</td>';
+                        htmlContent += '</tr>';
+                        htmlContent += '<td>MAPE </td>';
+                        htmlContent += '<td> (MAD / Data Aktual Bulan  '+data.bulan_n+') X 100 <br> = (' + data.mad + ' / '+data.periode_n+') x 100 <br> = ' + data.mape + ' %</td>';
+                        htmlContent += '</tr>';
                         htmlContent += '</tbody></table>';
                         htmlContent +=
                             '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
                             data.bulan_n + ', adalah sebanyak : ' + data.total_ma +
-                            ' </h4>';
+                            ' dengan error sebesar '+data.mape+' %</h4>';
                         htmlContent += '</div>';
                         htmlContent += '</div>';
+
 
                         // Append HTML content to the container
                         $('#hasil-ramalan').append(htmlContent);
