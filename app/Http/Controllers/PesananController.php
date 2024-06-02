@@ -29,9 +29,24 @@ class PesananController extends Controller
         $data['no_pesanan'] = 'INV-' . mt_rand(100000, 999999);
         $data['created_at'] = now();
         $data['updated_at'] = now();
-        $pesanan = DB::table('pesanan')->insert($data);
-        session()->flash('success', 'Berhasil mengirim pesanan dengan invoice = ' . $data['no_pesanan']);
-        return back()->withInput($data);
+        $cek_stok = Stok::cekStokUtama($data['id_produk'], $data['id_varian']);
+
+        if ($data['jumlah'] > $cek_stok) {
+            session()->flash('success', 'Berhasil mengirim pesanan dengan invoice = ' . $data['no_pesanan']);
+            return back()->withInput($data);
+        } else {
+            $stok = new Stok();
+            $stok->jenis = 'Penjualan';
+            $stok->id_user = Auth::id();
+            $stok->jumlah = $data['jumlah'];
+            $stok->id_varian = $data['id_varian'];
+            $stok->id_produk = $data['id_produk'];
+            $stok->created_at = now();
+            $stok->save();
+            $pesanan = DB::table('pesanan')->insert($data);
+            session()->flash('success', 'Berhasil mengirim pesanan dengan invoice = ' . $data['no_pesanan']);
+            return back()->withInput($data);
+        }
     }
     public function getPesananDataTable()
     {
@@ -93,6 +108,8 @@ class PesananController extends Controller
     public function destroy($id)
     {
         $data = Pesanan::find($id);
+        $stok = Stok::where('id_varian', $data->id_varian)->where('id_produk', $data->id_produk)->where('jenis', 'Penjualan')->latest()->first();
+        $stok->delete();
         $data->delete();
         return response()->json(['message' => 'Pesanan berhasil dibatalkan']);
     }
@@ -111,41 +128,43 @@ class PesananController extends Controller
         } else {
             return response()->json(['message' => 'gagal upload bukti']);
         }
-
+        $data->save();
+        return response()->json(['message' => 'Berhasil upload bukti bayar']);
 
         //terjual
-        $jumlah_bertambah = Stok::where('id_produk', $data->id_produk)
-            ->where(function ($query) use ($data) {
-                $query->where('id_varian', $data->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('jenis', 'Masuk')->sum('jumlah');
-        $jumlah_berkurang = Stok::where('id_produk', $data->id_produk)
-            ->where(function ($query) use ($data) {
-                $query->where('id_varian', $data->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('jenis', 'Keluar')->sum('jumlah');
-        $jumlah_penjualan = Stok::where('id_produk', $data->id_produk)
-            ->where(function ($query) use ($data) {
-                $query->where('id_varian', $data->id_varian)
-                    ->orWhereNull('id_varian');
-            })
-            ->where('jenis', 'Penjualan')->sum('jumlah');
-        $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
-        if ($jumlah >= $data->jumlah) {
-            $stok = new Stok();
-            $stok->jenis = 'Penjualan';
-            $stok->id_user = Auth::id();
-            $stok->jumlah = $data->jumlah;
-            $stok->id_varian = $data->id_varian ?? null;
-            $stok->id_produk = $data->id_produk;
-            $stok->created_at = now();
-            $stok->save();
-            $data->save();
-            return response()->json(['message' => 'Berhasil upload bukti bayar']);
-        } else {
-            return response()->json(['message' => 'Pesanan terkonfirmasi']);
-        }
+        // $jumlah_bertambah = Stok::where('id_produk', $data->id_produk)
+        //     ->where(function ($query) use ($data) {
+        //         $query->where('id_varian', $data->id_varian)
+        //             ->orWhereNull('id_varian');
+        //     })
+        //     ->where('jenis', 'Masuk')->sum('jumlah');
+        // $jumlah_berkurang = Stok::where('id_produk', $data->id_produk)
+        //     ->where(function ($query) use ($data) {
+        //         $query->where('id_varian', $data->id_varian)
+        //             ->orWhereNull('id_varian');
+        //     })
+        //     ->where('jenis', 'Keluar')->sum('jumlah');
+        // $jumlah_penjualan = Stok::where('id_produk', $data->id_produk)
+        //     ->where(function ($query) use ($data) {
+        //         $query->where('id_varian', $data->id_varian)
+        //             ->orWhereNull('id_varian');
+        //     })
+        //     ->where('jenis', 'Penjualan')->sum('jumlah');
+        // $jumlah = $jumlah_bertambah - $jumlah_berkurang - $jumlah_penjualan;
+        // if ($jumlah >= $data->jumlah) {
+        //     $stok = new Stok();
+        //     $stok->jenis = 'Penjualan';
+        //     $stok->id_user = Auth::id();
+        //     $stok->jumlah = $data->jumlah;
+        //     $stok->id_varian = $data->id_varian ?? null;
+        //     $stok->id_produk = $data->id_produk;
+        //     $stok->created_at = now();
+        //     $stok->save();
+        //     $data->save();
+        //     return response()->json(['message' => 'Berhasil upload bukti bayar']);
+        // } else {
+        //     return response()->json(['message' => 'Pesanan terkonfirmasi']);
+        // }
+
     }
 }

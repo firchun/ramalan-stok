@@ -192,9 +192,27 @@
                                         <div class="form-group mb-4">
                                             <select class="form-control" name="id_varian" required>
                                                 @foreach (App\Models\Varian::where('id_produk', $item->id)->get() as $varian)
+                                                    @php
+                                                        $jumlah_bertambah = App\Models\Stok::where(
+                                                            'id_produk',
+                                                            $item->id,
+                                                        )
+                                                            ->where('id_varian', $varian->id)
+                                                            ->where('jenis', 'Masuk')
+                                                            ->sum('jumlah');
+                                                        $jumlah_berkurang = App\Models\Stok::where(
+                                                            'id_produk',
+                                                            $item->id,
+                                                        )
+                                                            ->where('id_varian', $varian->id)
+                                                            ->whereIn('jenis', ['Keluar', 'Penjualan'])
+                                                            ->sum('jumlah');
+                                                        $jumlah = $jumlah_bertambah - $jumlah_berkurang;
+                                                    @endphp
                                                     <option value="{{ $varian->id }}">
                                                         {{ $varian->nama }} -
                                                         {{ $varian->jenis == 'ukuran' ? $varian->ukuran : $varian->nomor }}
+                                                        , Stok : {{ $jumlah }}
                                                     </option>
                                                 @endforeach
                                             </select>
