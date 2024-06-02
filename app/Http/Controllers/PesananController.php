@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
 use App\Models\Stok;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,9 +36,10 @@ class PesananController extends Controller
             session()->flash('success', 'Berhasil mengirim pesanan dengan invoice = ' . $data['no_pesanan']);
             return back()->withInput($data);
         } else {
+            $admin = User::where('role', 'Admin')->first();
             $stok = new Stok();
             $stok->jenis = 'Penjualan';
-            $stok->id_user = Auth::id();
+            $stok->id_user = $admin->id;
             $stok->jumlah = $data['jumlah'];
             $stok->id_varian = $data['id_varian'];
             $stok->id_produk = $data['id_produk'];
