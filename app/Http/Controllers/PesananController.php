@@ -82,11 +82,11 @@ class PesananController extends Controller
                 return $tombol;
             })
             ->addColumn('konfirmasi', function ($data) {
-                $pending = '<button type="button" onclick="konfirmasi(' . $data->id . ')" class="btn btn-sm btn-primary my-1">Konfirmasi</button>';
+                $pending = '<button type="button" onclick="konfirmasi(' . $data->id . ')" class="btn btn-sm btn-primary m-1">Konfirmasi</button>';
                 $batal = '<button type="button" onclick="batal(' . $data->id . ')" class="btn btn-sm btn-danger my-1">Batalkan</button>';
-                $bayar = '<button type="button" onclick="payment(' . $data->id . ')" class="btn btn-info">Bukti Bayar</button>';
+                $bayar = '<button type="button" onclick="payment(' . $data->id . ')" class="btn btn-sm btn-info m-1">Bukti Bayar</button>';
                 $success = '<span class="text-muted text-center">terkonfirmasi<br><a target="__blank" href="' . Storage::url($data->bukti_bayar) . '" class="btn btn-success btn-sm">lihat bukti bayar</a></span>';
-                $terkonfirmasi = $data->bukti_bayar == null ? $bayar : $success;
+                $terkonfirmasi = $data->bukti_bayar == null ? $bayar . $batal : $success;
                 $view = $data->is_verified == 0 ? $pending . $batal : $terkonfirmasi;
                 return $view;
             })
