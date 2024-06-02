@@ -81,6 +81,7 @@ class PesananController extends Controller
                 $tombol = '<a href="' . $link . '" class="btn btn-' . $type . '"><i class="bx bxl-whatsapp"></i></a>';
                 return $tombol;
             })
+
             ->addColumn('konfirmasi', function ($data) {
                 $pending = '<button type="button" onclick="konfirmasi(' . $data->id . ')" class="btn btn-sm btn-primary m-1">Konfirmasi</button>';
                 $batal = '<button type="button" onclick="batal(' . $data->id . ')" class="btn btn-sm btn-danger my-1">Batalkan</button>';
