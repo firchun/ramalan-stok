@@ -88,13 +88,13 @@
                                                     <div class='carousel-inner'>
                                                         <div class='item active'>
                                                             <img src='{{ $item->foto_produk == null || $item->foto_produk == '' ? asset('/img/logo.png') : Storage::url($item->foto_produk) }}'
-                                                                alt='' data-zoom-image="{{ $item->foto_produk == null || $item->foto_produk == '' ? asset('/img/logo.png') : Storage::url($item->foto_produk) }}" style="height:400px; object-fit:cover;">
+                                                                alt='' data-zoom-image="{{ $item->foto_produk == null || $item->foto_produk == '' ? asset('/img/logo.png') : Storage::url($item->foto_produk) }}" style="height:400px;width:100%; object-fit:cover;">
                                                         </div>
                                                         <!-- Variasi Foto -->
                                                         @foreach(App\Models\Varian::where('id_produk',$item->id)->where('foto','!=',null)->get() as $foto)
                                                         <div class='item'>
                                                             <img src='{{ Storage::url($foto->foto) }}'
-                                                                alt=''  data-zoom-image="{{ Storage::url($foto->foto) }}" style="height:400px; object-fit:cover;">
+                                                                alt=''  data-zoom-image="{{ Storage::url($foto->foto) }}" style="height:400px; width:100%; object-fit:cover;">
                                                         </div>
                                                         @endforeach
                                                     </div>
