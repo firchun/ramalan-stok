@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::post('/peramalan/store', [PeramalanController::class, 'store'])->name('peramalan.store');
 Route::get('/', function () {
     $produk = Produk::with(['jenis'])->latest()->paginate(12);
     return view('pages.index', ['produk' => $produk, 'title' => 'Beranda']);
@@ -151,4 +152,5 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::get('/peramalan/hasil/{id_produk}', [PeramalanController::class, 'hasilProduk'])->name('peramalan.hasil');
     Route::post('/peramalan/store', [PeramalanController::class, 'store'])->name('peramalan.store');
     Route::get('/hasil-ramalan-datatable/{id_produk}', [PeramalanController::class, 'getPeramalanDataTable']);
+    Route::get('/peramalan/pdf', [PeramalanController::class, 'pdf'])->name('peramalan.pdf');
 });

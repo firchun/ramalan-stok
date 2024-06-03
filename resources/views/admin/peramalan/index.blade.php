@@ -10,7 +10,7 @@
                     <div class="input-group">
                         <span class="input-group-text">Produk</span>
                         <select id="selectProduk" name="produk" class="form-select">
-                            <option value="">Semua</option>
+                            <option value="0">Semua</option>
                             @foreach (App\Models\Produk::all() as $item)
                                 <option value="{{ $item->id }}">{{ $item->nama_produk }}</option>
                             @endforeach
@@ -89,7 +89,6 @@
             </div>
         </div>
     </div>
-    
 @endsection
 @push('js')
     <script>
@@ -146,7 +145,6 @@
                 var id_produk = $('#selectProduk').val();
                 var bulan = $('#selectBulan').val();
                 var tahun = $('#selectTahun').val();
-
                 $.ajax({
                     type: 'POST',
                     url: '/peramalan/store',
@@ -157,7 +155,7 @@
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
-                        console.log(response);
+
                         if (response.success == false) {
                             alert(response.message);
                         }
@@ -165,58 +163,80 @@
 
                         // Clear existing content
                         $('#hasil-ramalan').empty();
-
                         var data = response[0];
-                        var htmlContent = '<div class="card mb-4">';
-                        htmlContent +=
-                            '<div class="card-header"><strong>Hasil Ramalan Produk ' + data
-                            .produk + ' Bulan : ' + data
-                            .bulan_n +
-                            '</strong></div>';
-                        htmlContent +=
-                            '<div class="card-body"><table class="table table-hover table-bordered">';
+                        if (id_produk != 0) {
+                            var htmlContent = '<div class="card mb-4">';
+                            htmlContent +=
+                                '<div class="card-header"><strong>Hasil Ramalan Produk ' + data
+                                .produk + ' Bulan : ' + data
+                                .bulan_n +
+                                '</strong></div>';
+                            htmlContent +=
+                                '<div class="card-body"><table class="table table-hover table-bordered">';
 
-                        htmlContent += '<tbody>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Produk </td>';
-                        htmlContent += '<td> ' + data.produk + '</td>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_1 + '</td>';
-                        htmlContent += '<td> ' + data.periode_1 + '</td>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_2 + '</td>';
-                        htmlContent += '<td> ' + data.periode_2 + '</td>';
-                        htmlContent += '</tr>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_3 + '</td>';
-                        htmlContent += '<td> ' + data.periode_3 + '</td>';
-                        htmlContent += '</tr>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Data Aktual Bulan ' + data.bulan_n + '</td>';
-                        htmlContent += '<td> ' + data.periode_n + '</td>';
-                        htmlContent += '</tr>';
-                        htmlContent += '<tr>';
-                        htmlContent += '<td>Moving Average (MA) </td>';
-                        htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.periode_1 +' + ' + data.periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data.total_ma + '</td>';
-                        htmlContent += '</tr>';
-                        
-                        htmlContent += '<td>MAD </td>';
-                        htmlContent += '<td> | Data Aktual Bulan '+data.bulan_n+' - MA | <br> = ' + data.periode_n + ' - '+data.total_ma+' <br>= '+data.mad+'</td>';
-                        htmlContent += '</tr>';
-                        htmlContent += '<td>MAPE </td>';
-                        htmlContent += '<td> (MAD / Data Aktual Bulan  '+data.bulan_n+') X 100 <br> = (' + data.mad + ' / '+data.periode_n+') x 100 <br> = ' + data.mape + ' %</td>';
-                        htmlContent += '</tr>';
-                        htmlContent += '</tbody></table>';
-                        htmlContent +=
-                            '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
-                            data.bulan_n + ', adalah sebanyak : ' + data.total_ma +
-                            ' dengan error sebesar '+data.mape+' %</h4>';
-                        htmlContent += '</div>';
-                        htmlContent += '</div>';
+                            htmlContent += '<tbody>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<td>Produk </td>';
+                            htmlContent += '<td> ' + data.produk + '</td>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<td>Data Aktual Bulan ' + data.bulan_1 + '</td>';
+                            htmlContent += '<td> ' + data.periode_1 + '</td>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<td>Data Aktual Bulan ' + data.bulan_2 + '</td>';
+                            htmlContent += '<td> ' + data.periode_2 + '</td>';
+                            htmlContent += '</tr>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<td>Data Aktual Bulan ' + data.bulan_3 + '</td>';
+                            htmlContent += '<td> ' + data.periode_3 + '</td>';
+                            htmlContent += '</tr>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<td>Data Aktual Bulan ' + data.bulan_n + '</td>';
+                            htmlContent += '<td> ' + data.periode_n + '</td>';
+                            htmlContent += '</tr>';
+                            htmlContent += '<tr>';
+                            htmlContent += '<td>Moving Average (MA) </td>';
+                            htmlContent += '<td> (P1+P2+P3)/3 <br> = (' + data.periode_1 +
+                                ' + ' +
+                                data.periode_2 + ' + ' + data.periode_3 + ')/3 <br>= ' + data
+                                .total_ma + '</td>';
+                            htmlContent += '</tr>';
 
-                        // Append HTML content to the container
-                        $('#hasil-ramalan').append(htmlContent);
+                            htmlContent += '<td>MAD </td>';
+                            htmlContent += '<td> | Data Aktual Bulan ' + data.bulan_n +
+                                ' - MA | <br> = ' + data.periode_n + ' - ' + data.total_ma +
+                                ' <br>= ' + data.mad + '</td>';
+                            htmlContent += '</tr>';
+                            htmlContent += '<td>MAPE </td>';
+                            htmlContent += '<td> (MAD / Data Aktual Bulan  ' + data.bulan_n +
+                                ') X 100 <br> = (' + data.mad + ' / ' + data.periode_n +
+                                ') x 100 <br> = ' + data.mape + ' %</td>';
+                            htmlContent += '</tr>';
+                            htmlContent += '</tbody></table>';
+                            htmlContent +=
+                                '<h4 class="mt-2 text-primary" >Jadi, untuk prediksi stok penjualan di bulan :  ' +
+                                data.bulan_n + ', adalah sebanyak : ' + data.total_ma +
+                                ' dengan error sebesar ' + data.mape + ' %</h4>';
+                            htmlContent += '</div>';
+                            htmlContent += '</div>';
+
+                            // Append HTML content to the container
+                            $('#hasil-ramalan').append(htmlContent);
+                        } else {
+                            alert('Behasil membuat ramalan');
+
+                            var htmlContent = '<div class="card mb-4">';
+                            htmlContent +=
+                                '<div class="card-body text-center">';
+                            htmlContent +=
+                                '<h3 class="text-primary">Untuk melihat hasil ataupun mendownload hasil peramalan silahkan klik tombol di bawah</h3>';
+                            htmlContent +=
+                                '<a target="__blank" href="{{ url('/peramalan/pdf') }}" class="btn btn-danger"><i class="bx bxs-file-pdf"></i>Lihat Hasil</a>';
+                            htmlContent += '</div>';
+                            htmlContent += '</div>';
+                            $('#hasil-ramalan').append(htmlContent);
+                        }
+
 
                     },
 

@@ -11,6 +11,7 @@ use Illuminate\Database\DBAL\TimestampType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class PeramalanController extends Controller
 {
@@ -87,100 +88,188 @@ class PeramalanController extends Controller
         if ($id_produk == null || $id_produk == '') {
             return response()->json(['message' => 'Harap pilih produk terlebih dahulu', 'success' => false]);
         }
+        if ($id_produk == 0) {
+            $this->forcAllProduk($bulan, $tahun);
+        } else {
 
-        //ambil data produk
-        $produk = Produk::find($id_produk);
-        //variabel untuk menampung semua data perbulan
-        $total_bulanan = [];
+            //ambil data produk
+            $produk = Produk::find($id_produk);
+            //variabel untuk menampung semua data perbulan
+            $total_bulanan = [];
 
-        //looping untuk 3 bulan
-        for ($i = 0; $i < 4; $i++) {
+            //looping untuk 3 bulan
+            for ($i = 0; $i < 4; $i++) {
 
-            //buat bulan berdasarkan loop (3bulan)
-            $date = Carbon::create($tahun, $bulan, 1)->subMonths($i);
-            $start_date = $date->copy()->startOfMonth();
-            $end_date = $date->copy()->endOfMonth();
+                //buat bulan berdasarkan loop (3bulan)
+                $date = Carbon::create($tahun, $bulan, 1)->subMonths($i);
+                $start_date = $date->copy()->startOfMonth();
+                $end_date = $date->copy()->endOfMonth();
 
-            //membuat tanggal awal dan tanggal akhir
-            $tanggal_awal = $start_date->format('Y-m-d');
-            $tanggal_akhir = $end_date->format('Y-m-d');
+                //membuat tanggal awal dan tanggal akhir
+                $tanggal_awal = $start_date->format('Y-m-d');
+                $tanggal_akhir = $end_date->format('Y-m-d');
 
-            //data penjualan admin
-            $stok = Stok::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
-                ->where('id_produk', $id_produk)
-                ->where('jenis', 'Penjualan')
-                ->sum('jumlah');
-            //data penjualan mitra
-            $stok_mitra = StokMitra::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
-                ->where('id_produk', $id_produk)
-                ->where('jenis', 'Penjualan')
-                ->sum('jumlah');
+                //data penjualan admin
+                $stok = Stok::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
+                    ->where('id_produk', $id_produk)
+                    ->where('jenis', 'Penjualan')
+                    ->sum('jumlah');
+                //data penjualan mitra
+                $stok_mitra = StokMitra::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
+                    ->where('id_produk', $id_produk)
+                    ->where('jenis', 'Penjualan')
+                    ->sum('jumlah');
 
-            //mengambil data bulan pertama, kedua dan ketiga
-            $total_bulanan[] = [
-                'bulan' => $date->format('F Y'),
-                'stok' => $stok,
-                'stok_mitra' => $stok_mitra
+                //mengambil data bulan pertama, kedua dan ketiga
+                $total_bulanan[] = [
+                    'bulan' => $date->format('F Y'),
+                    'stok' => $stok,
+                    'stok_mitra' => $stok_mitra
+                ];
+            };
+
+            //hitung perbulan
+            $total_stok = 0;
+            $total_stok_mitra = 0;
+            foreach ($total_bulanan as $total) {
+                $total_stok += $total['stok'];
+                $total_stok_mitra += $total['stok_mitra'];
+            }
+
+            //hitung total penjualan
+            $total_penjualan = ($total_stok + $total_stok_mitra) - ($total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra']);
+            //hitung rata-rata
+            $total_average = round($total_penjualan / 3);
+            //aktual bulan ini
+            $aktual_bulan_ini = $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'];
+            //nilai error = aktual bulan ini - average
+            $error = round(abs($aktual_bulan_ini - $total_average));
+            //error kuadrat = nilai (error )^
+            if ($aktual_bulan_ini <= 0) {
+                // return response()->json(['message' => 'Data aktual bulan ini 0 sehingga tidak bisa menghitung MAPE', 'success' => false]);
+                $error_2 = 0;
+            } else {
+
+                $error_2 = round(($error / $aktual_bulan_ini) * 100, 2);
+            }
+
+            $peramalanData = [
+                'id_produk' => $produk->id,
+                'periode_1' => $total_bulanan[3]['stok'] + $total_bulanan[3]['stok_mitra'],
+                'periode_2' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
+                'periode_3' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
+                'periode_n' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
+                'bulan_1' => $total_bulanan[3]['bulan'],
+                'bulan_2' => $total_bulanan[2]['bulan'],
+                'bulan_3' => $total_bulanan[1]['bulan'],
+                'bulan_n' => $total_bulanan[0]['bulan'],
+                'total_penjualan' => $aktual_bulan_ini,
+                'total_ma' => $total_average,
+                'mad' => $error,
+                'mape' => $error_2 ?? 0,
+                'tahun' => $tahun,
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
-        };
 
-        //hitung perbulan
-        $total_stok = 0;
-        $total_stok_mitra = 0;
-        foreach ($total_bulanan as $total) {
-            $total_stok += $total['stok'];
-            $total_stok_mitra += $total['stok_mitra'];
+            //pengujian tanpa menyimpan dengan tampilkan data json
+            // return response()->json([$peramalanData, 'message' => 'Berhasil', 'success' => true]);
+
+            //menyimpan dalam database
+            $simpan = DB::table('peramalan')->insert($peramalanData);
+            $peramalanData['produk'] = $produk->nama_produk;
+            if ($simpan) {
+                session()->flash('success', 'Berhasil membuat ramalan');
+                // return redirect()->to('/peramalan/hasil', $produk->id);
+                return response()->json([$peramalanData, 'message' => 'Berhasil membuat ramalan', 'success' => true]);
+            } else {
+                return response()->json(['message' => 'Gagal menyimpan ramalan', 'success' => false]);
+            }
         }
+    }
+    public function forcAllProduk($bulan, $tahun)
+    {
+        $produk = Produk::all();
+        foreach ($produk as $item) {
 
-        //hitung total penjualan
-        $total_penjualan = ($total_stok + $total_stok_mitra) - ($total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra']);
-        //hitung rata-rata
-        $total_average = round($total_penjualan / 3);
-        //aktual bulan ini
-        $aktual_bulan_ini = $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'];
-        //nilai error = aktual bulan ini - average
-        $error = round(abs($aktual_bulan_ini - $total_average));
-        //error kuadrat = nilai (error )^
-        if ($aktual_bulan_ini <= 0) {
-            // return response()->json(['message' => 'Data aktual bulan ini 0 sehingga tidak bisa menghitung MAPE', 'success' => false]);
-            $error_2 = 0;
-        } else {
+            $total_bulanan = [];
+            //looping untuk 3 bulan
+            for ($i = 0; $i < 4; $i++) {
 
-            $error_2 = round(($error / $aktual_bulan_ini) * 100, 2);
+                //buat bulan berdasarkan loop (3bulan)
+                $date = Carbon::create($tahun, $bulan, 1)->subMonths($i);
+                $start_date = $date->copy()->startOfMonth();
+                $end_date = $date->copy()->endOfMonth();
+
+                //membuat tanggal awal dan tanggal akhir
+                $tanggal_awal = $start_date->format('Y-m-d');
+                $tanggal_akhir = $end_date->format('Y-m-d');
+
+                //data penjualan admin
+                $stok = Stok::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
+                    ->where('id_produk', $item->id)
+                    ->where('jenis', 'Penjualan')
+                    ->sum('jumlah');
+                //data penjualan mitra
+                $stok_mitra = StokMitra::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
+                    ->where('id_produk', $item->id)
+                    ->where('jenis', 'Penjualan')
+                    ->sum('jumlah');
+
+                //mengambil data bulan pertama, kedua dan ketiga
+                $total_bulanan[] = [
+                    'bulan' => $date->format('F Y'),
+                    'stok' => $stok,
+                    'stok_mitra' => $stok_mitra
+                ];
+            };
+
+            //hitung perbulan
+            $total_stok = 0;
+            $total_stok_mitra = 0;
+            foreach ($total_bulanan as $total) {
+                $total_stok += $total['stok'];
+                $total_stok_mitra += $total['stok_mitra'];
+            }
+
+            //hitung total penjualan
+            $total_penjualan = ($total_stok + $total_stok_mitra) - ($total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra']);
+            //hitung rata-rata
+            $total_average = round($total_penjualan / 3);
+            //aktual bulan ini
+            $aktual_bulan_ini = $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'];
+            //nilai error = aktual bulan ini - average
+            $error = round(abs($aktual_bulan_ini - $total_average));
+            //error kuadrat = nilai (error )^
+            if ($aktual_bulan_ini <= 0) {
+                // return response()->json(['message' => 'Data aktual bulan ini 0 sehingga tidak bisa menghitung MAPE', 'success' => false]);
+                $error_2 = 0;
+            } else {
+
+                $error_2 = round(($error / $aktual_bulan_ini) * 100, 2);
+            }
+            $peramalanData = [
+                'id_produk' => $item->id,
+                'periode_1' => $total_bulanan[3]['stok'] + $total_bulanan[3]['stok_mitra'],
+                'periode_2' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
+                'periode_3' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
+                'periode_n' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
+                'bulan_1' => $total_bulanan[3]['bulan'],
+                'bulan_2' => $total_bulanan[2]['bulan'],
+                'bulan_3' => $total_bulanan[1]['bulan'],
+                'bulan_n' => $total_bulanan[0]['bulan'],
+                'total_penjualan' => $aktual_bulan_ini,
+                'total_ma' => $total_average,
+                'mad' => $error,
+                'mape' => $error_2 ?? 0,
+                'tahun' => $tahun,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            DB::table('peramalan')->insert($peramalanData);
         }
-
-        $peramalanData = [
-            'id_produk' => $produk->id,
-            'periode_1' => $total_bulanan[3]['stok'] + $total_bulanan[3]['stok_mitra'],
-            'periode_2' => $total_bulanan[2]['stok'] + $total_bulanan[2]['stok_mitra'],
-            'periode_3' => $total_bulanan[1]['stok'] + $total_bulanan[1]['stok_mitra'],
-            'periode_n' => $total_bulanan[0]['stok'] + $total_bulanan[0]['stok_mitra'],
-            'bulan_1' => $total_bulanan[3]['bulan'],
-            'bulan_2' => $total_bulanan[2]['bulan'],
-            'bulan_3' => $total_bulanan[1]['bulan'],
-            'bulan_n' => $total_bulanan[0]['bulan'],
-            'total_penjualan' => $aktual_bulan_ini,
-            'total_ma' => $total_average,
-            'mad' => $error,
-            'mape' => $error_2 ?? 0,
-            'tahun' => $tahun,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-
-        //pengujian tanpa menyimpan dengan tampilkan data json
-        // return response()->json([$peramalanData, 'message' => 'Berhasil', 'success' => true]);
-
-        //menyimpan dalam database
-        $simpan = DB::table('peramalan')->insert($peramalanData);
-        $peramalanData['produk'] = $produk->nama_produk;
-        if ($simpan) {
-            session()->flash('success', 'Berhasil membuat ramalan');
-            // return redirect()->to('/peramalan/hasil', $produk->id);
-            return response()->json([$peramalanData, 'message' => 'Berhasil membuat ramalan', 'success' => true]);
-        } else {
-            return response()->json(['message' => 'Gagal menyimpan ramalan', 'success' => false]);
-        }
+        session()->flash('success', 'Berhasil membuat ramalan');
+        return response()->json(['message' => 'Berhasil membuat ramalan', 'success' => true]);
     }
     public function show($id)
     {
@@ -198,5 +287,22 @@ class PeramalanController extends Controller
         $peramalan->delete();
 
         return response()->json(['message' => 'ramalan deleted successfully']);
+    }
+    public function pdf()
+    {
+        $peramalan = Produk::all();
+        $bulan = Peramalan::latest()->first()->bulan_n;
+        $data = [];
+        foreach ($peramalan as $item) {
+            $data[] = Peramalan::where('id_produk', $item->id)->latest()->first();
+        }
+        // dd($data);
+        $pdf = \PDF::loadview('admin/peramalan/pdf', [
+            'data' => $data,
+            'title' => 'Hasil Ramalan',
+            'bulan' => $bulan,
+        ])
+            ->setPaper('a4', 'potrait');
+        return $pdf->stream('Ramalan.pdf');
     }
 }
