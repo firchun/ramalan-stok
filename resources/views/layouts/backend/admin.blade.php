@@ -25,11 +25,10 @@
 
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/fonts/boxicons.css" />
-    <link rel="stylesheet" href="assets/vendor/libs/animate-css/animate.css" />
-    <link rel="stylesheet" href="assets/vendor/libs/sweetalert2/sweetalert2.css" />
+    <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/libs/animate-css/animate.css" />
+    <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/libs/sweetalert2/sweetalert2.css" />
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/core.css"
-        class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/core.css" />
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/vendor/css/rtl/theme-semi-dark.css"
         class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('backend_theme/') }}/assets/css/demo.css" />
