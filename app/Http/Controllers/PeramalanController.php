@@ -288,6 +288,21 @@ class PeramalanController extends Controller
 
         return response()->json(['message' => 'ramalan deleted successfully']);
     }
+    public function semua()
+    {
+        $peramalan = Produk::all();
+        $bulan = Peramalan::latest()->first()->bulan_n;
+        $data = [];
+        foreach ($peramalan as $item) {
+            $data[] = Peramalan::where('id_produk', $item->id)->latest()->first();
+        }
+        // dd($data);
+        return view('admin/peramalan/semua_ramalan', [
+            'data' => $data,
+            'title' => 'Hasil Ramalan Semua Produk',
+            'bulan' => $bulan,
+        ]);
+    }
     public function pdf()
     {
         $peramalan = Produk::all();

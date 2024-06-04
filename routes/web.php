@@ -153,4 +153,5 @@ Route::middleware(['auth:web', 'role:Admin'])->group(function () {
     Route::post('/peramalan/store', [PeramalanController::class, 'store'])->name('peramalan.store');
     Route::get('/hasil-ramalan-datatable/{id_produk}', [PeramalanController::class, 'getPeramalanDataTable']);
     Route::get('/peramalan/pdf', [PeramalanController::class, 'pdf'])->name('peramalan.pdf');
+    Route::get('/peramalan/semua', [PeramalanController::class, 'semua'])->name('peramalan.semua');
 });

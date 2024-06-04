@@ -115,27 +115,7 @@
                         name: 'action_ramalan'
                     }
                 ],
-                // initComplete: function() {
-                //     var table = this;
-                //     table.api().columns().every(function(index) {
-                //         if (index === 1 || index === 2) {
-                //             var column = this;
-                //             var title = column.header().textContent.trim();
 
-                //             var input = document.createElement('input');
-                //             input.placeholder = 'Search ' + title;
-                //             input.classList.add('form-control-sm');
-                //             // Menambahkan input ke dalam header
-                //             $(table.api().column(index).header()).empty().append(input);
-
-                //             $(input).on('keyup change clear', function() {
-                //                 if (column.search() !== this.value) {
-                //                     column.search(this.value).draw();
-                //                 }
-                //             });
-                //         }
-                //     });
-                // },
             });
 
             $('.refresh').click(function() {
@@ -231,10 +211,13 @@
                             htmlContent +=
                                 '<h3 class="text-primary">Untuk melihat hasil ataupun mendownload hasil peramalan silahkan klik tombol di bawah</h3>';
                             htmlContent +=
-                                '<a target="__blank" href="{{ url('/peramalan/pdf') }}" class="btn btn-danger"><i class="bx bxs-file-pdf"></i>Lihat Hasil</a>';
+                                '<a target="__blank" href="{{ url('/peramalan/pdf') }}" class="btn btn-danger mx-2"><i class="bx bxs-file-pdf"></i>Download Hasil</a>';
+                            htmlContent +=
+                                '<a  href="{{ url('/peramalan/semua') }}" class="btn btn-primary">Lihat Hasil</a>';
                             htmlContent += '</div>';
                             htmlContent += '</div>';
                             $('#hasil-ramalan').append(htmlContent);
+
                         }
 
 
