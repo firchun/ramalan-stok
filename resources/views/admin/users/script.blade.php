@@ -121,6 +121,7 @@
                         $('#userssModalLabel').text('Edit User');
                         $('#formUserName').val('');
                         $('#datatable-users').DataTable().ajax.reload();
+                        $('#datatable-mitra').DataTable().ajax.reload();
                         $('#create').modal('hide');
                     },
                     error: function(xhr) {
@@ -141,6 +142,7 @@
                             alert(response.message);
                             // Refresh DataTable setelah menghapus pengguna
                             $('#datatable-users').DataTable().ajax.reload();
+                            $('#datatable-mitra').DataTable().ajax.reload();
                         },
                         error: function(xhr) {
                             alert('Terjadi kesalahan: ' + xhr.responseText);

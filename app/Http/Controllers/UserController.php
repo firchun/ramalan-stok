@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Stok;
 use App\Models\StokMitra;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -143,6 +144,11 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+
+        $stok = Stok::where('id_user', $id);
+        $stok->delete();
+        $stok = StokMitra::where('id_user', $id);
+        $stok->delete();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
