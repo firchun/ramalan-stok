@@ -6,6 +6,7 @@ use App\Models\Stok;
 use App\Models\StokMitra;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -147,8 +148,27 @@ class UserController extends Controller
 
         $stok = Stok::where('id_user', $id);
         $stok->delete();
+
+        if ($user->role == 'Mitra') {
+            $produk = StokMitra::where('id_user', $user->id)
+                ->distinct('id_produk')->get();
+
+            foreach ($produk as $item) {
+                $stok_item = StokMitra::cekStokMitra($user->id, $item->id_produk, $item->id_varian);
+                if ($stok_item > 0) {
+                    $stok_utama = new Stok();
+                    $stok_utama->id_produk = $item->id_produk;
+                    $stok_utama->id_varian = $item->id_varian;
+                    $stok_utama->id_user = Auth::id();
+                    $stok_utama->jenis = 'Masuk';
+                    $stok_utama->jumlah = $stok_item;
+                    $stok_utama->save();
+                }
+            }
+        }
         $stok = StokMitra::where('id_user', $id);
         $stok->delete();
+
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);

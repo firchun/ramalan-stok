@@ -23,4 +23,20 @@ class StokMitra extends Model
     {
         return $this->belongsTo(Varian::class, 'id_varian');
     }
+    public static function cekStokMitra($id_mitra, $id_produk, $id_varian)
+    {
+        $jumlah_bertambah = self::where('id_user', $id_mitra)
+            ->where('id_produk', $id_produk)
+            ->where('id_varian', $id_varian)
+            ->where('jenis', 'Masuk')
+            ->sum('jumlah');
+        $jumlah_berkurang = self::where('id_user', $id_mitra)
+            ->where('id_produk', $id_produk)
+            ->where('id_varian', $id_varian)
+            ->whereIn('jenis', ['Keluar', 'Penjualan'])
+            ->sum('jumlah');
+        $jumlah = $jumlah_bertambah - $jumlah_berkurang;
+
+        return $jumlah;
+    }
 }
