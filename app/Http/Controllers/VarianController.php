@@ -96,7 +96,7 @@ class VarianController extends Controller
             // 'nomor' => 'string|max:255',
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
-            'foto' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            'foto' => 'file',
         ]);
 
         $varianData = [
