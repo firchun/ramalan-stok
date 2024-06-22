@@ -361,7 +361,7 @@
                 var ukuran = $('#formUkuranVarian').val();
                 var jenis = $('#formJenisVarian').val();
                 var nomor = $('#FormNomorVarian').val();
-                var file = $('#formFotoVarian')[0].files[0];
+                var file = $('#FormFotoVarian')[0].files[0];
 
                 // Membuat objek FormData
                 var formData = new FormData();
