@@ -107,7 +107,7 @@ class VarianController extends Controller
             'nomor' => $request->input('nomor'),
             'ukuran' => $request->input('ukuran'),
         ];
-        if ($request->hasFile('foto') && $request->file('foto')->isValid()) {
+        if ($request->file('foto')->isValid()) {
 
             $filename = Str::random(32) . '.' . $request->file('foto')->getClientOriginalExtension();
 
