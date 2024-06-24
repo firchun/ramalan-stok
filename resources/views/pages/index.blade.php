@@ -83,7 +83,7 @@
                                         <div class="single-product-slider">
                                             <div class='carousel-outer'>
                                                 <!-- Carousel Bootstrap (Carousel Induk) -->
-                                                <div id="carousel-custom-induk" class="carousel slide" data-ride="carousel">
+                                                <div id="carousel-custom-induk-{{$item->id}}" class="carousel slide" data-ride="carousel">
                                                     <!-- Wrapper for slides -->
                                                     <div class='carousel-inner'>
                                                         <div class='item active'>
@@ -99,10 +99,10 @@
                                                         @endforeach
                                                     </div>
                                                     <!-- Navigation -->
-                                                    <a class='left carousel-control' href='#carousel-custom-induk' role='button' data-slide='prev'>
+                                                    <a class='left carousel-control' href='#carousel-custom-induk-{{$item->id}}' role='button' data-slide='prev'>
                                                         <i class="tf-ion-ios-arrow-left"></i>
                                                     </a>
-                                                    <a class='right carousel-control' href='#carousel-custom-induk' role='button' data-slide='next'>
+                                                    <a class='right carousel-control' href='#carousel-custom-induk-{{$item->id}}' role='button' data-slide='next'>
                                                         <i class="tf-ion-ios-arrow-right"></i>
                                                     </a>
                                                 </div>
