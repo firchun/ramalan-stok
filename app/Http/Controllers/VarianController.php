@@ -107,15 +107,19 @@ class VarianController extends Controller
             'nomor' => $request->input('nomor'),
             'ukuran' => $request->input('ukuran'),
         ];
-        if ($request->hasFile('foto') || $request->hasFile('foto') != null || $request->hasFile('foto') != "") {
-            $filename = Str::random(32) . '.' . $request->file('foto')->getClientOriginalExtension();
-
+        if ($request->hasFile('foto')) {
             $image = $request->file('foto');
-            $image->storeAs('public/produk', $filename);
+            if ($image->isValid()) {
+
+                $filename = Str::random(32) . '.' . $request->file('foto')->getClientOriginalExtension();
+
+                $image = $request->file('foto');
+                $image->storeAs('public/produk', $filename);
 
 
-            $file_path = 'public/produk/' . $filename;
-            $varianData['foto'] = isset($file_path) ? $file_path : '';
+                $file_path = 'public/produk/' . $filename;
+                $varianData['foto'] = isset($file_path) ? $file_path : '';
+            }
         }
 
         // Jika jenis adalah 'ukuran', atur 'nomor' menjadi null
