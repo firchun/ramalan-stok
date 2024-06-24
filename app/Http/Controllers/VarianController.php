@@ -96,7 +96,7 @@ class VarianController extends Controller
             // 'nomor' => 'string|max:255',
             'nama' => 'required|string|max:255',
             'jenis' => 'required|string|max:255',
-            'foto' => 'file|mimes:jpeg,png,jpg,gif,webp|max:5048',
+            'foto' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp|max:5048',
         ]);
 
         $varianData = [
@@ -107,7 +107,7 @@ class VarianController extends Controller
             'nomor' => $request->input('nomor'),
             'ukuran' => $request->input('ukuran'),
         ];
-        if ($request->hasFile('foto')) {
+        if ($request->hasFile('foto') || $request->hasFile('foto') != null || $request->hasFile('foto') != "") {
             $filename = Str::random(32) . '.' . $request->file('foto')->getClientOriginalExtension();
 
             $image = $request->file('foto');
