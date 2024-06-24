@@ -286,6 +286,9 @@
                 var jenis = $('#formUpdateJenisVarian').val();
                 var nomor = $('#FormUpdateNomorVarian').val();
                 var file = $('#formFotoVarian')[0].files[0];
+                if (!file) {
+                    file = null;
+                }
 
                 // Membuat objek FormData
                 var formData = new FormData();
@@ -362,7 +365,9 @@
                 var jenis = $('#formJenisVarian').val();
                 var nomor = $('#FormNomorVarian').val();
                 var file = $('#FormFotoVarian')[0].files[0];
-
+                if (!file) {
+                    file = null;
+                }
                 // Membuat objek FormData
                 var formData = new FormData();
                 formData.append('kode_warna', kode_warna);
