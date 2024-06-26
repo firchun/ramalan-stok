@@ -247,7 +247,6 @@ class PeramalanController extends Controller
             } else {
 
                 $error_2 = round(($error / $aktual_bulan_ini) * 100);
-                // $error_2 = round(($error / $aktual_bulan_ini) * 100, 2);
             }
             $peramalanData = [
                 'id_produk' => $item->id,
