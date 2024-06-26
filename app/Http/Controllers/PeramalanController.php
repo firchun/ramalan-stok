@@ -246,7 +246,7 @@ class PeramalanController extends Controller
                 $error_2 = 0;
             } else {
 
-                $error_2 = round((abs($aktual_bulan_ini - $total_average) / $aktual_bulan_ini) * 100);
+                $error_2 = round(($error / $aktual_bulan_ini) * 100);
                 // $error_2 = round(($error / $aktual_bulan_ini) * 100, 2);
             }
             $peramalanData = [
