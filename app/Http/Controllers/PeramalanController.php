@@ -202,8 +202,10 @@ class PeramalanController extends Controller
                 $end_date = $date->copy()->endOfMonth();
 
                 //membuat tanggal awal dan tanggal akhir
-                $tanggal_awal = $start_date->format('Y-m-d');
-                $tanggal_akhir = $end_date->format('Y-m-d');
+                // $tanggal_awal = $start_date->format('Y-m-d');
+                // $tanggal_akhir = $end_date->format('Y-m-d');
+                $tanggal_awal = $start_date->startOfDay()->toDateTimeString();
+                $tanggal_akhir = $end_date->endOfDay()->toDateTimeString();
 
                 //data penjualan admin
                 $stok = Stok::whereBetween('created_at', [$tanggal_awal, $tanggal_akhir])
