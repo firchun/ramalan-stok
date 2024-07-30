@@ -64,7 +64,7 @@
                         <th>Tahun</th>
                         <th>Moving Average</th>
                         <th>MAD</th>
-                        <th>MAPE</th>
+                        <th style="width: 60px;">MAPE</th>
                     </tr>
                 </thead>
 
@@ -92,7 +92,7 @@
                             <td>{{ $item->tahun }}</td>
                             <td>{{ $item->total_ma }}</td>
                             <td>{{ $item->mad }}</td>
-                            <td>{{ $item->mape }}</td>
+                            <td>{{ $item->mape }} %</td>
                         </tr>
                     @endforeach
                 </tbody>
