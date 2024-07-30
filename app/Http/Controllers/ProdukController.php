@@ -157,7 +157,7 @@ class ProdukController extends Controller
                 return  'Rp '.number_format($produk->harga_modal);
             })
             ->addColumn('harga_jual', function ($produk) {
-                $harga_jual = number_format($produk->harga_jual);
+                $harga_jual = 'Rp '.number_format($produk->harga_jual);
                 $harga_diskon = '<del> Rp'.number_format($produk->harga_jual).'</del><br><strong class="text-danger"> Rp'.number_format($produk->harga_discount).'</strong>';
                 return $produk->is_discount == 1 ? $harga_diskon : $harga_jual;
             })
